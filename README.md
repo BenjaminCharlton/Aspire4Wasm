@@ -5,7 +5,6 @@ An easy way to pass service discovery information from a distributed application
 .NET Aspire doesn't currently (as of early 2025) facilitate a Blazor WebAssembly (client) app discovering Aspire resources, even if the app has been added to the distributed application because Blazor WebAssembly apps run in the browser and are "standalone". This has been commented on here:
 
 * https://github.com/dotnet/aspire/issues/4785
-* https://stackoverflow.com/questions/78607828/how-to-add-aspire-to-blazor-webassembly-standalone-app-in-net-8
 
 The expectation is that these apps will still be aware of the web APIs they're supposed to call and can store these in appsettings.json or appsettings.{environmentName}.json. This works fine, but if the endpoint changes, or if it differs in your development and production environments, you have to remember to manage those changes in your client app as well as your other resources. This library solves that problem by writing the service discovery information to the appsettings.{environmentName}.json file of your client app for you.
 
