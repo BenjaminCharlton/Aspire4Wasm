@@ -25,6 +25,7 @@ In your client's Program.cs file:
 See the example below:
 
 ## Example Program.cs in AppHost
+```
 var builder = DistributedApplication.CreateBuilder(args);
 
 var inventoryApi = builder.AddProject<Projects.AspNetCoreWebApi>("inventoryapi");
@@ -36,8 +37,9 @@ builder.AddProject<Projects.Blazor>("blazorServer")
     .WithReference(billingApi);
 
 builder.Build().Run();
-
+```
 ## Example Program.cs in your Blazor WebAssembly Client
+```
 builder.Services.AddServiceDiscovery();
 builder.Services.ConfigureHttpClientDefaults(static http =>
 {
@@ -55,10 +57,11 @@ builder.Services.AddHttpClient<IInventoryService, InventoryService>(
     {
         client.BaseAddress = new Uri("https+http://billingapi");
     });
-
+```
 ## Default behaviour
 Using the default behaviour (in the example) your AppHost will write the service discovery information for all the referenced resources into the appsettings.{environmentName}.json file of your client app for you.
 It uses the following structure, recommended by the Aspire team:
+```
 {
   "Services": {
     "resourceName": {
@@ -71,10 +74,10 @@ It uses the following structure, recommended by the Aspire team:
     }
   }
 }
-
+```
 ## Custom behaviours
 If you want to serialize the service discovery information some other way in your WebAssembly application (for example, in a different JSON file, or in an XML file) you can do so in the AppHost Program.cs by creating a custom implementation of IServiceDiscoveryInfoSerializer and passing it to the call to AddWebAssemblyClient via the WebAssemblyProjectBuilderOptions class, like this:
-
+```
 var builder = DistributedApplication.CreateBuilder(args);
 
 var inventoryApi = builder.AddProject<Projects.AspNetCoreWebApi>("inventoryapi");
@@ -88,8 +91,9 @@ builder.AddProject<Projects.Blazor>("blazorServer")
     .WithReference(billingApi);
 
 builder.Build().Run();
-
+```
 ## Custom implementations of IServiceDiscoveryInfoSerializer
 If you choose to make a custom implementation, you only need to override on method, ensuring that however you choose to serialize the information, Aspire will be able to read it in your client app:
-
+```
 public void SerializeServiceDiscoveryInfo(IResourceWithServiceDiscovery resource) { }
+```
