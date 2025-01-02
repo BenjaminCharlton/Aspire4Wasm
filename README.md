@@ -6,7 +6,9 @@ An easy way to pass service discovery information from a distributed application
 
 * https://github.com/dotnet/aspire/issues/4785
 
-The expectation is that these apps will need to be aware of the web APIs they're supposed to call without relying on Aspire, and that they will store these in appsettings.json or appsettings.{environmentName}.json. This works fine, but if the endpoint changes, or if it differs in your development and production environments, you have to remember to manage those changes in your client app as well as your other resources. This library solves that problem by writing the service discovery information to the appsettings.{environmentName}.json file of your client app for you.
+The expectation is that these apps will need to be aware of the web APIs they're supposed to call without relying on Aspire, and that they will store these in `appsettings.json` or `appsettings.{environmentName}.json`. This works fine, but if the endpoint changes, or if it differs in your development and production environments, you have to remember to manage those changes in your client app as well as your other resources. This is precisely the problem Aspire is intended to solve.
+
+My little library Aspire4Wasm solves the problem by writing the service discovery information to the `appsettings.{environmentName}.json` file of your client app for you.
 
 ## Quickstart
 Install Aspire4Wasm in your AppHost project via the Nuget package. No need to install it on the client project.
@@ -96,3 +98,6 @@ If you choose to make a custom implementation, you only need to override on meth
 ```
 public void SerializeServiceDiscoveryInfo(IResourceWithServiceDiscovery resource) { }
 ```
+
+## Contributing
+I'm a hobbyist. I know there are loads of people out there who will see ways to improve this that I can't code or can't even imagine. If you want to have a crack, bring it on! Send a pull request.
