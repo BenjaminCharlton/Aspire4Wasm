@@ -18,10 +18,10 @@ In your AppHost project's Program.cs file:
 2. Add your Blazor Server app then chain a call to AddWebAssemblyClient to add your client app.
 5. Chain a call to WithReference to point the client to each web API (you can repeat this for as many Web APIs as you need)
 
-In your client's Program.cs file:
+In your client's `Program.cs` file:
 
-1. Call AddServiceDiscovery
-2. Configure your HttpClients either globally or one at a time. In each client's BaseAddress property, use the name you gave to the resource in your AppHost.
+1. Call `AddServiceDiscovery`
+2. Configure your `HttpClient`s either globally or one at a time. In each client's `BaseAddress` property, use the name you gave to the resource in your AppHost.
 
 See the example below:
 
@@ -60,24 +60,24 @@ builder.Services.AddHttpClient<IInventoryService, InventoryService>(
     });
 ```
 ## Default behaviour
-Using the default behaviour (in the example) your AppHost will write the service discovery information for all the referenced resources into the appsettings.{environmentName}.json file of your client app for you.
-It uses the following structure, recommended by the Aspire team:
+Using the default behaviour (in the example) your AppHost will write the service discovery information for all the referenced resources into the `appsettings.{environmentName}.json` file of your client app for you.
+It uses the following structure. The structure is important because it allows Aspire to "discover" the information on the client.
 ```
 {
   "Services": {
     "resourceName": {
       "https": [
-        "https://localhost:7222"
+        "https://localhost:1234"
       ],
       "http": [
-        "http://localhost:5050"
+        "http://localhost:4321"
       ]
     }
   }
 }
 ```
 ## Custom behaviours
-If you want to serialize the service discovery information some other way in your WebAssembly application (for example, in a different JSON file, or in an XML file) you can do so in the AppHost Program.cs by creating a custom implementation of IServiceDiscoveryInfoSerializer and passing it to the call to AddWebAssemblyClient via the WebAssemblyProjectBuilderOptions class, like this:
+If you want to serialize the service discovery information some other way in your WebAssembly application (for example, in a different JSON file, or in an XML file) you can do so in the AppHost `Program.cs` by creating a custom implementation of `IServiceDiscoveryInfoSerializer` and passing it to the call to `AddWebAssemblyClient` via the `WebAssemblyProjectBuilderOptions` class, like this:
 ```
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -93,11 +93,12 @@ builder.AddProject<Projects.Blazor>("blazorServer")
 
 builder.Build().Run();
 ```
+
 ## Custom implementations of IServiceDiscoveryInfoSerializer
-If you choose to make a custom implementation, you only need to override on method, ensuring that however you choose to serialize the information, Aspire will be able to read it in your client app:
+If you choose to make a custom implementation, you only need to override one method:
 ```
 public void SerializeServiceDiscoveryInfo(IResourceWithServiceDiscovery resource) { }
 ```
-
+Note: If you choose to override the default behaviour with an output format that Aspire can't read from your WebAssembly client app, you'll also need to override the discovery behaviour on the client, which is outside the scope of what I've developed here.
 ## Contributing
-I'm a hobbyist. I know there are loads of people out there who will see ways to improve this that I can't code or can't even imagine. If you want to have a crack, bring it on! Send a pull request.
+I'm a hobbyist. I know there are loads of people out there who will know ways to improve this that I can't code, or see opportunities for improvement that I can't even imagine. If you want to contribute, bring it on! Send me a pull request.
