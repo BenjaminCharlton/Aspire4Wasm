@@ -40,6 +40,7 @@ builder.AddProject<Projects.Blazor>("blazorServer")
 builder.Build().Run();
 ```
 ## Example Program.cs in your Blazor WebAssembly Client
+Install (on the WebAssembly client) the Microsoft.Extensions.ServiceDiscovery Nuget package to get the official Aspire service discovery functionality that is going to read your resource information from your app settings.
 ```
 builder.Services.AddServiceDiscovery();
 builder.Services.ConfigureHttpClientDefaults(static http =>
