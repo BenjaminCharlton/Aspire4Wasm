@@ -75,7 +75,7 @@ It uses the following structure. The structure is important because it allows As
         "http://localhost:4321"
       ]
     },
-"billingapi": {
+    "billingapi": {
       "https": [
         "https://localhost:9876"
       ],
