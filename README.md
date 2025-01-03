@@ -60,6 +60,7 @@ builder.Services.AddHttpClient<IInventoryService, InventoryService>(
         client.BaseAddress = new Uri("https+http://billingapi");
     });
 ```
+(I recommend extracting the names of the resources (e.g. "billingapi" and "inventoryapi") into a string constant somewhere shared by the AppHost and the client, and your other referenced projects. You probably do this already though! That way, the name is consistent throughout the whole solution.)
 ## Default behaviour
 Using the default behaviour (in the example) your AppHost will write the service discovery information for all the referenced resources into the `appsettings.{environmentName}.json` file of your client app for you.
 It uses the following structure. The structure is important because it allows Aspire to "discover" the information on the client.
