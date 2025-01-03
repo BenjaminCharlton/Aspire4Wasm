@@ -15,8 +15,8 @@ Install Aspire4Wasm in your AppHost project via the Nuget package. No need to in
 In your AppHost project's Program.cs file:
 
 1. Add the Web Apis you want your client to be able to call.
-2. Add your Blazor Server app then chain a call to AddWebAssemblyClient to add your client app.
-5. Chain a call to WithReference to point the client to each web API (you can repeat this for as many Web APIs as you need)
+2. Add your Blazor Server app then chain a call to `AddWebAssemblyClient` to add your client app.
+5. Chain a call to `WithReference` to point the client to each web API (you can repeat this for as many Web APIs as you need)
 
 In your client's `Program.cs` file:
 
