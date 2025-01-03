@@ -2,7 +2,7 @@
 An easy way to pass service discovery information from a distributed application in Aspire down to your Blazor WebAssembly (client) applications. You can then add service discovery to the client app just like any other Aspire resource, and it just works!
 
 ## Problem statement
-.NET Aspire doesn't currently (as of early 2025) facilitate a Blazor WebAssembly (client) app discovering Aspire resources, even if the app has been added to the distributed application because Blazor WebAssembly apps run in the browser and are "standalone". This has been commented on here:
+.NET Aspire doesn't currently (as of early 2025) facilitate a Blazor WebAssembly (client) app discovering Aspire resources, even if the app has been added to the distributed application, because Blazor WebAssembly apps run in the browser and are "standalone". This has been commented on here:
 
 * https://github.com/dotnet/aspire/issues/4785
 
