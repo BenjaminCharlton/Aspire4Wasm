@@ -103,12 +103,10 @@ builder.AddProject<Projects.Blazor>("blazorServer")
 
 builder.Build().Run();
 ```
-
-## Custom implementations of IServiceDiscoveryInfoSerializer
-If you choose to make a custom implementation, you only need to override one method:
+If you choose to make a custom implementation of `IServiceDiscoveryInfoSerializer`, you only need to override one method:
 ```
 public void SerializeServiceDiscoveryInfo(IResourceWithServiceDiscovery resource) { }
 ```
 Note: If you choose to override the default behaviour with an output format that Aspire can't read from your WebAssembly client app, you'll also need to override the discovery behaviour on the client, which is outside the scope of what I've developed here.
 ## Contributing
-I'm a hobbyist. I know there are loads of people out there who will know ways to improve this that I can't code, or see opportunities for improvement that I can't even imagine. If you want to contribute, bring it on! Send me a pull request.
+I'm a hobbyist. I know there are loads of people out there who be able to improve this in ways I can't, or see opportunities for improvement that I can't even imagine. If you want to contribute, bring it on! Send me a pull request.
