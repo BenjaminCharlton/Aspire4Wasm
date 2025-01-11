@@ -1,6 +1,6 @@
-﻿using Aspire.Hosting.ApplicationModel;
-using Aspire.Hosting.Testing;
-using Moq;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -19,7 +19,7 @@ public class JsonServiceDiscoveryInfoSerializerTests
     public async Task SerializeServiceDiscoveryInfo_EndpointsNotYetAllocated_ThrowsInvalidOperationException()
     {
         // Arrange
-        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<BlazorFluentUI_AppHost>();
+        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Aspire4Wasm_DummyApp_AppHost>();
         var resourceBuilder = distributedApplicationBuilder.CreateResourceBuilder(new ProjectResource("TestResource"))
             .WithEndpoint(1, 1, "https", "TestEndpoint", distributedApplicationBuilder.Environment.EnvironmentName, false, false);
 
@@ -34,7 +34,7 @@ public class JsonServiceDiscoveryInfoSerializerTests
     public async Task SerializeServiceDiscoveryInfo_ValidResource_SavesCorrectJson()
     {
         // Arrange
-        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<BlazorFluentUI_AppHost>();
+        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Aspire4Wasm_DummyApp_AppHost>();
         var resourceBuilder = distributedApplicationBuilder.CreateResourceBuilder(new ProjectResource("TestResource"))
             .WithEndpoint(1, 1, "https", "TestEndpoint", distributedApplicationBuilder.Environment.EnvironmentName, false, false);
         var resource = resourceBuilder.Resource;
@@ -71,7 +71,7 @@ public class JsonServiceDiscoveryInfoSerializerTests
     public async Task SerializeServiceDiscoveryInfo_ResourceWithNoEndpoints_SavesCorrectJson()
     {
         // Arrange
-        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<BlazorFluentUI_AppHost>();
+        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Aspire4Wasm_DummyApp_AppHost>();
         var resourceBuilder = distributedApplicationBuilder.CreateResourceBuilder(new ProjectResource("TestResource"));
         var mockFileAccessor = new Mock<IJsonFileAccessor>();
 

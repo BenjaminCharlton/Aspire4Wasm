@@ -12,5 +12,5 @@ public interface IServiceDiscoveryInfoSerializer
     /// Adds service discovery information for the <paramref name="resource"/> to the application.
     /// </summary>
     /// <param name="resource">The resource for which to add service discovery information.</param>
-    void SerializeServiceDiscoveryInfo(IResourceWithServiceDiscovery resource);
+    void SerializeServiceDiscoveryInfo(IResourceWithEndpoints resource);
 }

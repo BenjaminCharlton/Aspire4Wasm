@@ -22,7 +22,7 @@ public sealed class WebAssemblyProjectBuilderOptions
         /// Does nothing by design.
         /// </summary>
         /// <param name="resource">The resource for which to add service discovery information.</param>
-        public void SerializeServiceDiscoveryInfo(IResourceWithServiceDiscovery resource) { }
+        public void SerializeServiceDiscoveryInfo(IResourceWithEndpoints resource) { }
     }
 
 }

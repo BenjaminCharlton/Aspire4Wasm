@@ -14,31 +14,58 @@ namespace Aspire.Hosting;
 /// <param name="serializer">An implementation of <see cref="IServiceDiscoveryInfoSerializer" /> that can be used to pass service discovery information to the Blazor WebAssembly (client) application. It could, for example,
 /// serialize the data and save it in a JSON or XML file to be read by the client app.</param>
 /// <exception cref="ArgumentNullException">Will be thrown if the <see cref="ClientSideBlazorBuilder{TProject}" /> or the <see cref="IServiceDiscoveryInfoSerializer" /> is null.</exception>
-internal sealed class ClientSideBlazorBuilder<TProject>(IResourceBuilder<ProjectResource> projectBuilder, IServiceDiscoveryInfoSerializer serializer)
-    : IClientSideBlazorBuilder<TProject>
-    where TProject : IProjectMetadata, new()
+internal sealed class ClientSideBlazorBuilder<TProject>
+    : IResourceBuilder<ProjectResource>
+    where TProject : IProjectMetadata
 {
-    private readonly IResourceBuilder<ProjectResource> _projectBuilder = projectBuilder ?? throw new ArgumentNullException(nameof(projectBuilder));
-    private readonly IServiceDiscoveryInfoSerializer _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+    private readonly IResourceBuilder<ProjectResource> _innerBuilder;
+    private readonly string _name;
+    private readonly IServiceDiscoveryInfoSerializer _serializer;
 
-    public IProjectMetadata GetProjectMetadata()
+    public ClientSideBlazorBuilder(IResourceBuilder<ProjectResource> blazorWasmProjectBuilder,
+        string name,
+        IServiceDiscoveryInfoSerializer serializer)
     {
-        return _projectBuilder.Resource.GetProjectMetadata();
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        _name = name;
+        _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
+        _innerBuilder = blazorWasmProjectBuilder ?? throw new ArgumentNullException(nameof(blazorWasmProjectBuilder));
     }
 
-    /// <summary>
-    /// Injects service discovery information into the Blazor WebAssembly application from the project resource into the destination resource, using the source resource's name as the service name, after the endpoints have been allocated.
-    /// </summary>
-    /// <param name="source">The resource from which to extract service discovery information.</param>
-    /// <returns>A reference to the <see cref="IResourceBuilder{ProjectResource}"/>.</returns>
-    public IResourceBuilder<ProjectResource> WithReference(IResourceBuilder<IResourceWithServiceDiscovery> source)
-    {
-        _projectBuilder.ApplicationBuilder.Eventing.Subscribe<AfterEndpointsAllocatedEvent>((@event, cancellationToken) =>
-        {
-            _serializer.SerializeServiceDiscoveryInfo(source.Resource);
-            return Task.CompletedTask;
-        });
+    public IDistributedApplicationBuilder ApplicationBuilder => _innerBuilder.ApplicationBuilder;
 
-        return _projectBuilder;
+    public ProjectResource Resource => (ProjectResource)_innerBuilder.ApplicationBuilder.Resources.Single(r => string.Equals(r.Name, _name, StringComparison.OrdinalIgnoreCase));
+
+    public IResourceBuilder<ProjectResource> WithAnnotation<TAnnotation>(TAnnotation annotation, ResourceAnnotationMutationBehavior behavior)
+        where TAnnotation : IResourceAnnotation
+    {
+        // TODO: What about the behaviour?
+
+        if (TryGetResourceWithEndpoints(annotation, out var source))
+        {
+            _innerBuilder.ApplicationBuilder.Eventing.Subscribe<AfterEndpointsAllocatedEvent>((@event, cancellationToken) =>
+            {
+                _serializer.SerializeServiceDiscoveryInfo(source!);
+                return Task.CompletedTask;
+            });
+
+        }
+
+        return this;
+    }
+
+    private static bool TryGetResourceWithEndpoints(object annotation, out IResourceWithEndpoints? resource)
+    {
+        // Maybe there's a better way to do this than using reflection, but I can't think of one!
+        var resourceProperty = annotation.GetType().GetProperty("Resource");
+
+        if (resourceProperty is null)
+        {
+            resource = null;
+            return false;
+        }
+
+        resource = resourceProperty.GetValue(annotation, null) as IResourceWithEndpoints;
+        return resource != null;
     }
 }

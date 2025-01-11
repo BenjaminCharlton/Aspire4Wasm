@@ -16,7 +16,7 @@ internal sealed class JsonServiceDiscoveryInfoSerializer(IJsonFileAccessor fileA
     /// Serializes the service discovery information for the <paramref name="resource"/> to JSON and saves it to the file accessed by the <see cref="IJsonFileAccessor"/> supplied in the constructor.
     /// </summary>
     /// <param name="resource">The resource for which to add service discovery information.</param>
-    public void SerializeServiceDiscoveryInfo(IResourceWithServiceDiscovery resource)
+    public void SerializeServiceDiscoveryInfo(IResourceWithEndpoints resource)
     {
         var json = _fileAccessor.ReadFileAsJson();
 

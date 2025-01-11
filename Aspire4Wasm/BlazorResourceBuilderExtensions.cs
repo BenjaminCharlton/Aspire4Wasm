@@ -16,7 +16,7 @@ public static class BlazorResourceBuilderExtensions
     /// instead, passing the desired behaviour in it the <see cref="WebAssemblyProjectBuilderOptions" /> parameter.
     /// </summary>
     /// <typeparam name="TWebAssemblyProject">A type that represents the project reference. It should be a Blazor WebAssembly (i.e. client) project.</typeparam>
-    /// <param name="blazorServerProjectbuilder">The <see cref="IDistributedApplicationBuilder"/> used to create the Blazor Server project that references the Blazor WebAssembly client.</param>
+    /// <param name="blazorServerProjectBuilder">The <see cref="IDistributedApplicationBuilder"/> used to create the Blazor Server project that references the Blazor WebAssembly client.</param>
     /// <param name="webAssemblyProjectName">The name of the Blazor WebAssembly project resource. This name will be used for service discovery when referenced in a dependency.</param>
     /// <returns>A reference to the <see cref="ClientSideBlazorBuilder{TProject}"/>.</returns>
     /// <remarks>
@@ -24,7 +24,7 @@ public static class BlazorResourceBuilderExtensions
     /// This overload of the <see cref="AddWebAssemblyClient{TWebAssemblyProject}(IResourceBuilder{ProjectResource}, string)" /> method takes
     /// a <typeparamref name="TWebAssemblyProject"/> type parameter. The <typeparamref name="TWebAssemblyProject"/> type parameter is constrained
     /// to types that implement the <see cref="IProjectMetadata"/> interface and it also needs to be a Blazor WebAssembly Project (client) project that is referenced by the Blazor Server app
-    /// represented by the <paramref name="blazorServerProjectbuilder"/>.
+    /// represented by the <paramref name="blazorServerProjectBuilder"/>.
     /// </para>
     /// <para>
     /// Classes that implement the <see cref="IProjectMetadata"/> interface are generated when a .NET project is added as a reference
@@ -56,14 +56,14 @@ public static class BlazorResourceBuilderExtensions
     /// builder.Build().Run();
     /// </code>
     /// </example>
-    public static IClientSideBlazorBuilder<TWebAssemblyProject> AddWebAssemblyClient<TWebAssemblyProject>(
-        this IResourceBuilder<ProjectResource> blazorServerProjectbuilder,
+    public static IResourceBuilder<ProjectResource> AddWebAssemblyClient<TClientProject>(
+        this IResourceBuilder<IResource> blazorServerProjectBuilder,
         string webAssemblyProjectName)
-        where TWebAssemblyProject : IProjectMetadata, new()
+        where TClientProject : IProjectMetadata, new()
     {
-        ArgumentNullException.ThrowIfNull(blazorServerProjectbuilder, nameof(blazorServerProjectbuilder));
+        ArgumentNullException.ThrowIfNull(blazorServerProjectBuilder, nameof(blazorServerProjectBuilder));
 
-        return blazorServerProjectbuilder.AddWebAssemblyClient<TWebAssemblyProject>(webAssemblyProjectName, (options, clientProject, environment) =>
+        return blazorServerProjectBuilder.AddWebAssemblyClient<TClientProject>(webAssemblyProjectName, (options, clientProject, environment) =>
         {
             var appSettingsAccessor = new AppSettingsJsonFileAccessor(clientProject.ProjectPath, environment.EnvironmentName);
             var serviceDiscoverySerializer = new JsonServiceDiscoveryInfoSerializer(appSettingsAccessor);
@@ -75,7 +75,7 @@ public static class BlazorResourceBuilderExtensions
     /// Adds a Blazor WebAssembly project (client) to the application model. Passes Aspire service discovery information to the WebAssembly client using a means passed in the <paramref name="configure"/> action.
     /// </summary>
     /// <typeparam name="TWebAssemblyProject">A type that represents the project reference. It should be a Blazor WebAssembly (i.e. client) project.</typeparam>
-    /// <param name="blazorServerProjectbuilder">The <see cref="IDistributedApplicationBuilder"/> used to create the Blazor Server project that references the Blazor WebAssembly client.</param>
+    /// <param name="blazorServerProjectBuilder">The <see cref="IDistributedApplicationBuilder"/> used to create the Blazor Server project that references the Blazor WebAssembly client.</param>
     /// <param name="webAssemblyProjectName">The name of the Blazor WebAssembly project resource. This name will be used for service discovery when referenced in a dependency.</param>
     /// <param name="configure"></param>
     /// <returns>A reference to the <see cref="ClientSideBlazorBuilder{TProject}"/>.</returns>
@@ -84,7 +84,7 @@ public static class BlazorResourceBuilderExtensions
     /// This overload of the <see cref="AddWebAssemblyClient{TWebAssemblyProject}(IResourceBuilder{ProjectResource}, string, Action{WebAssemblyProjectBuilderOptions})" /> method takes
     /// a <typeparamref name="TWebAssemblyProject"/> type parameter. The <typeparamref name="TWebAssemblyProject"/> type parameter is constrained
     /// to types that implement the <see cref="IProjectMetadata"/> interface and it also needs to be a Blazor WebAssembly Project (client) project that is referenced by the Blazor Server app
-    /// represented by the <paramref name="blazorServerProjectbuilder"/>.
+    /// represented by the <paramref name="blazorServerProjectBuilder"/>.
     /// </para>
     /// <para>
     /// Classes that implement the <see cref="IProjectMetadata"/> interface are generated when a .NET project is added as a reference
@@ -124,20 +124,20 @@ public static class BlazorResourceBuilderExtensions
     /// builder.Build().Run();
     /// </code>
     /// </example>
-    public static IClientSideBlazorBuilder<TWebAssemblyProject> AddWebAssemblyClient<TWebAssemblyProject>(
-            this IResourceBuilder<ProjectResource> blazorServerProjectbuilder,
+    public static IResourceBuilder<ProjectResource> AddWebAssemblyClient<TClientProject>(
+            this IResourceBuilder<IResource> blazorServerProjectBuilder,
             string webAssemblyProjectName,
             Action<WebAssemblyProjectBuilderOptions, IProjectMetadata, IHostEnvironment> configure)
-            where TWebAssemblyProject : IProjectMetadata, new()
+            where TClientProject : IProjectMetadata, new()
     {
-        ArgumentNullException.ThrowIfNull(blazorServerProjectbuilder, nameof(blazorServerProjectbuilder));
+        ArgumentNullException.ThrowIfNull(blazorServerProjectBuilder, nameof(blazorServerProjectBuilder));
 
-        var distributedApplicationBuilder = blazorServerProjectbuilder.ApplicationBuilder;
-        var webAssemblyProjectBuilder = distributedApplicationBuilder.AddProject<TWebAssemblyProject>(webAssemblyProjectName);
+        var distributedApplicationBuilder = blazorServerProjectBuilder.ApplicationBuilder;
+        var webAssemblyProjectBuilder = distributedApplicationBuilder.AddProject<TClientProject>(webAssemblyProjectName);
 
         var options = new WebAssemblyProjectBuilderOptions();
         configure(options, webAssemblyProjectBuilder.Resource.GetProjectMetadata(), distributedApplicationBuilder.Environment);
 
-        return new ClientSideBlazorBuilder<TWebAssemblyProject>(webAssemblyProjectBuilder, options.ServiceDiscoveryInfoSerializer);
+        return new ClientSideBlazorBuilder<TClientProject>(webAssemblyProjectBuilder, webAssemblyProjectName, options.ServiceDiscoveryInfoSerializer);
     }
 }

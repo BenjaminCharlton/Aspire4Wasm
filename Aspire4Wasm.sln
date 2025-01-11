@@ -1,11 +1,30 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aspire4Wasm", "Aspire4Wasm\Aspire4Wasm.csproj", "{02FCDCE2-FCF1-41DE-98A8-124B52F2F252}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aspire4Wasm", "Aspire4Wasm\Aspire4Wasm.csproj", "{45D34A0E-0C3C-4258-89D3-F3242BC768F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aspire4Wasm.Tests", "Aspire4Wasm.Tests\Aspire4Wasm.Tests.csproj", "{D028A57D-982C-4A36-8A46-44802CD06DAF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aspire4Wasm.Tests", "Aspire4Wasm.Tests\Aspire4Wasm.Tests.csproj", "{5FE52F95-E6F4-48FC-89DD-CB36A237A30F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EE378741-ACBC-44A9-963A-488DADFCC21D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aspire4Wasm.DummyApp.AppHost", "Aspire4Wasm.DummyApp.AppHost\Aspire4Wasm.DummyApp.AppHost.csproj", "{71530DB8-3B22-4B8F-994B-DB900B80B4DD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9C291F19-899B-468A-8AB5-B65347589CDA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{482D77C8-7E72-4B1B-9FB7-28911DB8FEAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aspire4Wasm.DummyApp.BlazorServer", "Aspire4Wasm.DummyApp.BlazorServer\Aspire4Wasm.DummyApp.BlazorServer.csproj", "{415F3BE6-63F2-4A5E-82A3-81E2113A71C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aspire4Wasm.DummyApp.BlazorWasm", "Aspire4Wasm.DummyApp.BlazorWasm\Aspire4Wasm.DummyApp.BlazorWasm.csproj", "{230BB290-F595-4003-BBF8-8926D3241DBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aspire4Wasm.DummyApp.ServiceDefaults", "Aspire4Wasm.DummyApp.ServiceDefaults\Aspire4Wasm.DummyApp.ServiceDefaults.csproj", "{57D18991-5B3B-4B69-BE7A-9F7EFA307FD4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aspire4Wasm.DummyApp.WebApi", "Aspire4Wasm.DummyApp.WebApi\Aspire4Wasm.DummyApp.WebApi.csproj", "{7B001D8F-A857-4CC7-B421-4A61A74D0888}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,16 +32,45 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{02FCDCE2-FCF1-41DE-98A8-124B52F2F252}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{02FCDCE2-FCF1-41DE-98A8-124B52F2F252}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{02FCDCE2-FCF1-41DE-98A8-124B52F2F252}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{02FCDCE2-FCF1-41DE-98A8-124B52F2F252}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D028A57D-982C-4A36-8A46-44802CD06DAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D028A57D-982C-4A36-8A46-44802CD06DAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D028A57D-982C-4A36-8A46-44802CD06DAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D028A57D-982C-4A36-8A46-44802CD06DAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45D34A0E-0C3C-4258-89D3-F3242BC768F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45D34A0E-0C3C-4258-89D3-F3242BC768F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45D34A0E-0C3C-4258-89D3-F3242BC768F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45D34A0E-0C3C-4258-89D3-F3242BC768F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FE52F95-E6F4-48FC-89DD-CB36A237A30F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FE52F95-E6F4-48FC-89DD-CB36A237A30F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FE52F95-E6F4-48FC-89DD-CB36A237A30F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FE52F95-E6F4-48FC-89DD-CB36A237A30F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71530DB8-3B22-4B8F-994B-DB900B80B4DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71530DB8-3B22-4B8F-994B-DB900B80B4DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71530DB8-3B22-4B8F-994B-DB900B80B4DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71530DB8-3B22-4B8F-994B-DB900B80B4DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{415F3BE6-63F2-4A5E-82A3-81E2113A71C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{415F3BE6-63F2-4A5E-82A3-81E2113A71C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{415F3BE6-63F2-4A5E-82A3-81E2113A71C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{415F3BE6-63F2-4A5E-82A3-81E2113A71C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{230BB290-F595-4003-BBF8-8926D3241DBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{230BB290-F595-4003-BBF8-8926D3241DBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{230BB290-F595-4003-BBF8-8926D3241DBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{230BB290-F595-4003-BBF8-8926D3241DBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57D18991-5B3B-4B69-BE7A-9F7EFA307FD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57D18991-5B3B-4B69-BE7A-9F7EFA307FD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57D18991-5B3B-4B69-BE7A-9F7EFA307FD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57D18991-5B3B-4B69-BE7A-9F7EFA307FD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B001D8F-A857-4CC7-B421-4A61A74D0888}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B001D8F-A857-4CC7-B421-4A61A74D0888}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B001D8F-A857-4CC7-B421-4A61A74D0888}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B001D8F-A857-4CC7-B421-4A61A74D0888}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{45D34A0E-0C3C-4258-89D3-F3242BC768F1} = {9C291F19-899B-468A-8AB5-B65347589CDA}
+		{5FE52F95-E6F4-48FC-89DD-CB36A237A30F} = {482D77C8-7E72-4B1B-9FB7-28911DB8FEAD}
+		{71530DB8-3B22-4B8F-994B-DB900B80B4DD} = {482D77C8-7E72-4B1B-9FB7-28911DB8FEAD}
+		{415F3BE6-63F2-4A5E-82A3-81E2113A71C4} = {482D77C8-7E72-4B1B-9FB7-28911DB8FEAD}
+		{230BB290-F595-4003-BBF8-8926D3241DBC} = {482D77C8-7E72-4B1B-9FB7-28911DB8FEAD}
+		{57D18991-5B3B-4B69-BE7A-9F7EFA307FD4} = {482D77C8-7E72-4B1B-9FB7-28911DB8FEAD}
+		{7B001D8F-A857-4CC7-B421-4A61A74D0888} = {482D77C8-7E72-4B1B-9FB7-28911DB8FEAD}
 	EndGlobalSection
 EndGlobal

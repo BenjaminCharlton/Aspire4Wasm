@@ -1,4 +1,7 @@
-﻿using System.IO.Abstractions.TestingHelpers;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using System.IO.Abstractions.TestingHelpers;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -9,6 +12,7 @@ public class AppSettingsJsonFileAccessorTests
     private const string TestProjectPath = @"C:\Projects\TestProject\test.csproj";
     private const string TestEnvironmentName = "Development";
     private const string TestAppSettingsFilePath = @"C:\Projects\TestProject\wwwroot\appsettings.Development.json";
+
     private readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -91,8 +95,7 @@ public class AppSettingsJsonFileAccessorTests
     {
         // Arrange
         var jsonContent = new JsonObject { ["Key"] = "Value" };
-        var serializedContent = JsonSerializer.Serialize(jsonContent, _jsonSerializerOptions);
-
+        var serializedContent = jsonContent.ToJsonString(_jsonSerializerOptions);
 
         var fileSystemMock = new MockFileSystem(new Dictionary<string, MockFileData>());
 
@@ -100,10 +103,11 @@ public class AppSettingsJsonFileAccessorTests
 
         // Act
         accessor.SaveJson(jsonContent);
+        var actual = JsonSerializer.Deserialize<JsonObject>(fileSystemMock.GetFile(TestAppSettingsFilePath).TextContents, _jsonSerializerOptions)!.ToJsonString(_jsonSerializerOptions);
 
         // Assert
         Assert.True(fileSystemMock.FileExists(TestAppSettingsFilePath));
-        Assert.Equal(serializedContent, fileSystemMock.GetFile(TestAppSettingsFilePath).TextContents);
+        Assert.Equal(serializedContent, actual);
     }
 
     [Fact]

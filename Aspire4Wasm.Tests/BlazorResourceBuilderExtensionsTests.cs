@@ -1,5 +1,5 @@
-﻿using Aspire.Hosting.ApplicationModel;
-using Aspire.Hosting.Testing;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
 namespace Aspire.Hosting.Tests;
 
@@ -10,29 +10,29 @@ public class BlazorResourceBuilderExtensionsTests
     public async Task AddWebAssemblyClient_WithoutConfigure_InvokesDefaultConfiguration()
     {
         // Arrange
-        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<BlazorFluentUI_AppHost>();
+        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Aspire4Wasm_DummyApp_AppHost>();
         var webApiBuilder = distributedApplicationBuilder.CreateResourceBuilder(new ProjectResource("webapi"));
         var serverBuilder = distributedApplicationBuilder.CreateResourceBuilder(new ProjectResource("serverapp"));
 
         // Act
-        var clientBuilder = serverBuilder.AddWebAssemblyClient<BlazorFluentUI_Client>("clientapp").WithReference(webApiBuilder);
+        var clientBuilder = serverBuilder.AddWebAssemblyClient<Projects.Aspire4Wasm_DummyApp_BlazorWasm>("clientapp").WithReference(webApiBuilder);
 
         // Assert
         Assert.NotNull(clientBuilder);
-        Assert.IsAssignableFrom<IResourceBuilder<ProjectResource>>(clientBuilder);
+        Assert.IsType<IResourceBuilder<ProjectResource>>(clientBuilder, false);
     }
 
     [Fact]
     public async Task AddWebAssemblyClient_WithCustomConfiguration_InvokesConfigurationCallback()
     {
         // Arrange
-        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<BlazorFluentUI_AppHost>();
+        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Aspire4Wasm_DummyApp_AppHost>();
         var serverBuilder = distributedApplicationBuilder.CreateResourceBuilder(new ProjectResource("serverapp"));
 
         var optionsCaptured = false;
 
         // Act
-        var clientBuilder = serverBuilder.AddWebAssemblyClient<BlazorFluentUI_Client>("clientapp",
+        var clientBuilder = serverBuilder.AddWebAssemblyClient<Projects.Aspire4Wasm_DummyApp_BlazorWasm>("clientapp",
             (options, projectMetadata, environment) =>
             {
                 optionsCaptured = true;
@@ -52,18 +52,18 @@ public class BlazorResourceBuilderExtensionsTests
 
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() =>
-            nullResourceBuilder!.AddWebAssemblyClient<BlazorFluentUI_Client>("TestWebAssemblyProject"));
+            nullResourceBuilder!.AddWebAssemblyClient<Projects.Aspire4Wasm_DummyApp_BlazorWasm>("TestWebAssemblyProject"));
     }
 
     [Fact]
     public async Task AddWebAssemblyClient_HandlesEmptyProjectName_ThrowsArgumentException()
     {
         // Arrange
-        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<BlazorFluentUI_AppHost>();
+        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Aspire4Wasm_DummyApp_AppHost>();
         var serverBuilder = distributedApplicationBuilder.CreateResourceBuilder(new ProjectResource("serverapp"));
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() =>
-            serverBuilder.AddWebAssemblyClient<BlazorFluentUI_Client>(string.Empty));
+            serverBuilder.AddWebAssemblyClient<Projects.Aspire4Wasm_DummyApp_BlazorWasm>(string.Empty));
     }
 }

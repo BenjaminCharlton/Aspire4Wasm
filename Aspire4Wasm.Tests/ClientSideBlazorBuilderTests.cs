@@ -1,5 +1,5 @@
-﻿using Aspire.Hosting.ApplicationModel;
-using Moq;
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
 
 namespace Aspire.Hosting.Tests;
 
@@ -12,7 +12,40 @@ public class ClientSideBlazorBuilderTests
         var mockSerializer = new Mock<IServiceDiscoveryInfoSerializer>();
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => new ClientSideBlazorBuilder<BlazorFluentUI_Client>(null!, mockSerializer.Object));
+        Assert.Throws<ArgumentNullException>(() => new ClientSideBlazorBuilder<Projects.Aspire4Wasm_DummyApp_BlazorWasm>(null!, "wasmclient", mockSerializer.Object));
+    }
+
+    [Fact]
+    public void Constructor_NullResourceName_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var mockSerializer = new Mock<IServiceDiscoveryInfoSerializer>();
+        var mockBuilder = new Mock<IResourceBuilder<ProjectResource>>();
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => new ClientSideBlazorBuilder<Projects.Aspire4Wasm_DummyApp_BlazorWasm>(mockBuilder.Object, null!, mockSerializer.Object));
+    }
+
+    [Fact]
+    public void Constructor_EmptyResourceName_ThrowsArgumentException()
+    {
+        // Arrange
+        var mockSerializer = new Mock<IServiceDiscoveryInfoSerializer>();
+        var mockBuilder = new Mock<IResourceBuilder<ProjectResource>>();
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => new ClientSideBlazorBuilder<Projects.Aspire4Wasm_DummyApp_BlazorWasm>(mockBuilder.Object, string.Empty, mockSerializer.Object));
+    }
+
+    [Fact]
+    public void Constructor_WhitespaceResourceName_ThrowsArgumentException()
+    {
+        // Arrange
+        var mockSerializer = new Mock<IServiceDiscoveryInfoSerializer>();
+        var mockBuilder = new Mock<IResourceBuilder<ProjectResource>>();
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => new ClientSideBlazorBuilder<Projects.Aspire4Wasm_DummyApp_BlazorWasm>(mockBuilder.Object, " ", mockSerializer.Object));
     }
 
     [Fact]
@@ -22,16 +55,6 @@ public class ClientSideBlazorBuilderTests
         var mockProjectBuilder = new Mock<IResourceBuilder<ProjectResource>>();
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => new ClientSideBlazorBuilder<BlazorFluentUI_Client>(mockProjectBuilder.Object, null!));
+        Assert.Throws<ArgumentNullException>(() => new ClientSideBlazorBuilder<Projects.Aspire4Wasm_DummyApp_BlazorWasm>(mockProjectBuilder.Object, "wasmclient", null!));
     }
-}
-
-public class BlazorFluentUI_Client : IProjectMetadata
-{
-    public string ProjectPath => "client";
-}
-
-public class BlazorFluentUI_AppHost : IProjectMetadata
-{
-    public string ProjectPath => "host";
 }
