@@ -109,7 +109,7 @@ public void SerializeServiceDiscoveryInfo(IResourceWithServiceDiscovery resource
 ```
 Note: If you choose to override the default behaviour with an output format that Aspire can't read from your WebAssembly client app, you'll also need to override the discovery behaviour on the client, which is outside the scope of what I've developed here.
 ## Using service discovery to configure CORS in your web API (optional)
-Now that your Blazor app has a reference to one or more web APIs, you can also to the converse - reference one or more Blazor apps from a web API. Why would you want to do that? One use case would be to configure Cross Origin Resource Sharing (CORS) in the web API to grant access to your clients.
+You can also reference one or more Blazor apps from a web API. One use case would be to configure Cross Origin Resource Sharing (CORS) in the web API to grant access to your clients to submit HTTP requests.
 ### Example updated Program.cs in AppHost project
 ```
 var builder = DistributedApplication.CreateBuilder(args);
