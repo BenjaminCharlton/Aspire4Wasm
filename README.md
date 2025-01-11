@@ -1,5 +1,5 @@
-# Aspire4Wasm
-An easy way to pass service discovery information from a distributed application in Aspire down to your Blazor WebAssembly (client) applications. You can then add service discovery to the client app just like any other Aspire resource, and it just works!
+# Aspire4Wasm    
+An easy way to pass service discovery information from a distributed application in Aspire down to your Blazor WebAssembly (client) applications. You can then add service discovery to the client app just like any other Aspire resource. Don't need the source code? Get the Nuget package: https://www.nuget.org/packages/Aspire4Wasm/
 
 ## Problem statement
 .NET Aspire doesn't currently (as of early 2025) facilitate a Blazor WebAssembly (client) app discovering Aspire resources, even if the app has been added to the distributed application, because Blazor WebAssembly apps run in the browser and are "standalone". This has been commented on here:
@@ -86,7 +86,7 @@ It uses the following structure. The structure is important because it allows As
   }
 }
 ```
-## Custom behaviours
+## Custom behaviours (optional)
 If you want to serialize the service discovery information some other way in your WebAssembly application (for example, in a different JSON file, or in an XML file) you can do so in the AppHost `Program.cs` by creating a custom implementation of `IServiceDiscoveryInfoSerializer` and passing it to the call to `AddWebAssemblyClient` via the `WebAssemblyProjectBuilderOptions` class, like this:
 ```
 var builder = DistributedApplication.CreateBuilder(args);
@@ -108,5 +108,7 @@ If you choose to make a custom implementation of `IServiceDiscoveryInfoSerialize
 public void SerializeServiceDiscoveryInfo(IResourceWithServiceDiscovery resource) { }
 ```
 Note: If you choose to override the default behaviour with an output format that Aspire can't read from your WebAssembly client app, you'll also need to override the discovery behaviour on the client, which is outside the scope of what I've developed here.
+## CORS (optional) in your web API
+Now that your Blazor WebAssembly (client) app has a reference to one or more web APIs, you can
 ## Contributing
 I'm a hobbyist. I know there are loads of people out there who be able to improve this in ways I can't, or see opportunities for improvement that I can't even imagine. If you want to contribute, bring it on! Send me a pull request.
