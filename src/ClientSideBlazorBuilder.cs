@@ -43,12 +43,12 @@ internal sealed class ClientSideBlazorBuilder<TProject>
 
         if (TryGetResourceWithEndpoints(annotation, out var source))
         {
+
             _innerBuilder.ApplicationBuilder.Eventing.Subscribe<AfterEndpointsAllocatedEvent>((@event, cancellationToken) =>
             {
                 _serializer.SerializeServiceDiscoveryInfo(source!);
                 return Task.CompletedTask;
             });
-
         }
 
         return this;

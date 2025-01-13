@@ -10,7 +10,7 @@ public class BlazorResourceBuilderExtensionsTests
     public async Task AddWebAssemblyClient_WithoutConfigure_InvokesDefaultConfiguration()
     {
         // Arrange
-        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Aspire4Wasm_DummyApp_AppHost>();
+        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<Aspire4Wasm.DummyApp.AppHost.Program>();
         var webApiBuilder = distributedApplicationBuilder.CreateResourceBuilder(new ProjectResource("webapi"));
         var serverBuilder = distributedApplicationBuilder.CreateResourceBuilder(new ProjectResource("serverapp"));
 
@@ -26,7 +26,7 @@ public class BlazorResourceBuilderExtensionsTests
     public async Task AddWebAssemblyClient_WithCustomConfiguration_InvokesConfigurationCallback()
     {
         // Arrange
-        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Aspire4Wasm_DummyApp_AppHost>();
+        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<Aspire4Wasm.DummyApp.AppHost.Program>();
         var serverBuilder = distributedApplicationBuilder.CreateResourceBuilder(new ProjectResource("serverapp"));
 
         var optionsCaptured = false;
@@ -56,10 +56,10 @@ public class BlazorResourceBuilderExtensionsTests
     }
 
     [Fact]
-    public async Task AddWebAssemblyClient_HandlesEmptyProjectName_ThrowsArgumentException()
+    public async Task AddWebAssemblyClient_EmptyProjectName_ThrowsArgumentException()
     {
         // Arrange
-        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<Projects.Aspire4Wasm_DummyApp_AppHost>();
+        var distributedApplicationBuilder = await DistributedApplicationTestingBuilder.CreateAsync<Aspire4Wasm.DummyApp.AppHost.Program>();
         var serverBuilder = distributedApplicationBuilder.CreateResourceBuilder(new ProjectResource("serverapp"));
 
         // Act & Assert
