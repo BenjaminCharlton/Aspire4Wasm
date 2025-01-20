@@ -156,5 +156,9 @@ builder.Services.AddCors(options =>
 
 // Etc.
 ```
+## Troubleshooting
+These are just a few things that I noticed helped me and I hope they help you too.
+* You don't need a `launchsettings.json` in your webassembly client project. The one in your Blazor server project will do.
+* In the `launchsettings.json` of your blazor server project, I recommend that you set `launchBrowser` to `false` for all profiles. This means that when the Aspire dashboard opens up, you'll need to click the link to open up your Blazor client. This is good! If you don't do this, your Blazor client is going to launch on a random port chosen by Aspire. When launched on a random port, your web API might reject the requests of your Blazor client because it doesn't have the expected origin to comply with the API's CORS policy. I tried to stop this happening but couldn't, so this is my workaround.
 ## Contributing
 I'm a hobbyist. I know there are loads of people out there who be able to improve this in ways I can't, or see opportunities for improvement that I can't even imagine. If you want to contribute, bring it on! Send me a pull request.
