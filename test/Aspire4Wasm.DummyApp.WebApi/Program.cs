@@ -11,6 +11,19 @@ internal class Program
         // Add service defaults & Aspire client integrations.
         builder.AddServiceDefaults();
 
+        var clients = builder.Configuration.GetSection("Clients").Get<string[]>() ?? []; // Get the clients from the list in appsettings.
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins(clients); // Add the clients as allowed origins for cross origin resource sharing.
+                policy.AllowAnyMethod();
+                policy.WithHeaders("X-Requested-With");
+                policy.AllowCredentials();
+            });
+        });
+
         // Add services to the container.
         builder.Services.AddProblemDetails();
 

@@ -13,7 +13,15 @@ internal class Program
         builder.RootComponents.Add<App>("#app");
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
-        builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+        builder.Services.AddServiceDiscovery();
+        builder.Services.ConfigureHttpClientDefaults(static http =>
+        {
+            http.AddServiceDiscovery();
+            http.ConfigureHttpClient(client =>
+            {
+                client.BaseAddress = new Uri("https+http://apiservice");
+            });
+        });
 
         await builder.Build().RunAsync().ConfigureAwait(false);
     }
