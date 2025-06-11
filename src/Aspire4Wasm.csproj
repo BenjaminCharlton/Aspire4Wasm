@@ -17,18 +17,18 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <FileVersion></FileVersion>
     <AssemblyVersion></AssemblyVersion>
-    <Version>3.0.0</Version>
+    <Version>4.0.0</Version>
     <IsAspireSharedProject>true</IsAspireSharedProject>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting" Version="9.1.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.4">
+    <PackageReference Include="Aspire.Hosting" Version="9.3.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="4.14.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="TestableIO.System.IO.Abstractions" Version="22.0.12" />
-    <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="22.0.12" />
+    <PackageReference Include="TestableIO.System.IO.Abstractions" Version="22.0.14" />
+    <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="22.0.14" />
   </ItemGroup>
 
 	<ItemGroup>
