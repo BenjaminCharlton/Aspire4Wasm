@@ -8,12 +8,12 @@ internal class Program
     {
         var builder = DistributedApplication.CreateBuilder(args);
 
-        var api = builder.AddProject<Projects.Aspire4Wasm_DummyApp_WebApi>("apiservice");
+        var api = builder.AddProject<Projects.Aspire4Wasm_DummyApp_WebApi>("api");
 
-        var blazorServer = builder.AddProject<Projects.Aspire4Wasm_DummyApp_BlazorServer>("webfrontend")
+        var blazorServer = builder.AddProject<Projects.Aspire4Wasm_DummyApp_BlazorServer>("blazorserver")
             .WithReference(api)
             .WaitFor(api)
-            .AddWebAssemblyClient<Projects.Aspire4Wasm_DummyApp_BlazorWasm>("webclientapp")
+            .AddWebAssemblyClient<Projects.Aspire4Wasm_DummyApp_BlazorWasm>("blazorwasm")
             .WithReference(api);
 
         api.WithReference(blazorServer);

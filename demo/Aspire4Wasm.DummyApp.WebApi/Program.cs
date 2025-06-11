@@ -15,7 +15,7 @@ internal class Program
         {
             options.AddDefaultPolicy(policy =>
             {
-                var clients = GetAllowedOrigins(builder.Configuration, "webclientapp");
+                var clients = GetAllowedOrigins(builder.Configuration, "blazorwasm");
 
                 policy.WithOrigins(clients); // Add the clients as allowed origins for cross origin resource sharing.
                 policy.AllowAnyMethod();
