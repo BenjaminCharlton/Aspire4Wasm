@@ -125,13 +125,10 @@ blazorServer.AddWebAssemblyClient<Projects.InMyCountry_UI_Client>("blazorWasmCli
 
 builder.Build().Run();
 ```
-### The example above will add the following to the appsettings{.Environment}.json file of the web API project
+### The example above will add environment variables to the web API project, for example:
 ```
-{
-  "Clients": [
-    "https://{url of your blazor app should be here}"
-  ]
-}
+services__webclientapp__http__0 = http://localhost:56481
+services__webclientapp__https__0 = http://localhost:56480
 
 ```
 It should add as many clients as you configured in the AppHost.
@@ -141,7 +138,7 @@ Now that the web API has a reference to the Blazor app in appsettings, we can co
 var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
-var clients = GetAllowedOrigins(builder.Configuration, "blazorWasmClient"); // Get the clients from the list in appsettings. The second argument needs to be the resource name you passed when calling AddWebAssemblyClient in Program.cs of the AppHost project.
+var clients = GetAllowedOrigins(builder.Configuration, "blazorWasmClient"); // Get the clients from the environment variables. The second argument needs to be the resource name you passed when calling AddWebAssemblyClient in Program.cs of the AppHost project.
 
 builder.Services.AddCors(options =>
 {
