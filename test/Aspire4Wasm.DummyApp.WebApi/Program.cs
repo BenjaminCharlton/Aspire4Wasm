@@ -11,12 +11,12 @@ internal class Program
         // Add service defaults & Aspire client integrations.
         builder.AddServiceDefaults();
 
-        var clients = builder.Configuration.GetSection("Clients").Get<string[]>() ?? []; // Get the clients from the list in appsettings.
-
         builder.Services.AddCors(options =>
         {
             options.AddDefaultPolicy(policy =>
             {
+                var clients = GetAllowedOrigins(builder.Configuration, "webclientapp");
+
                 policy.WithOrigins(clients); // Add the clients as allowed origins for cross origin resource sharing.
                 policy.AllowAnyMethod();
                 policy.WithHeaders("X-Requested-With");
@@ -34,6 +34,7 @@ internal class Program
 
         // Configure the HTTP request pipeline.
         app.UseExceptionHandler();
+        app.UseCors();
 
         if (app.Environment.IsDevelopment())
         {
@@ -59,6 +60,28 @@ internal class Program
         app.MapDefaultEndpoints();
 
         app.Run();
+    }
+
+    private static string[] GetAllowedOrigins(ConfigurationManager config, string resourceName)
+    {
+        var configSection = config.GetSection($"services:{resourceName}");
+
+        var clients = new List<string>();
+
+        foreach (var protocol in new[] { "http", "https" })
+        {
+            var subSection = configSection.GetSection(protocol);
+            foreach (var child in subSection.GetChildren())
+            {
+                var value = child.Get<string>();
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    clients.Add(value);
+                }
+            }
+        }
+
+        return [.. clients];
     }
 }
 
