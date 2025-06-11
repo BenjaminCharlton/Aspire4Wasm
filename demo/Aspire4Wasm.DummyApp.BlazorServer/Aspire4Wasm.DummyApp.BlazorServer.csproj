@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="WeatherApiClient.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Components\Pages\Weather.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Aspire4Wasm.DummyApp.ServiceDefaults\Aspire4Wasm.DummyApp.ServiceDefaults.csproj" />
   </ItemGroup>
 
