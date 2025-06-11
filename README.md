@@ -141,7 +141,7 @@ Now that the web API has a reference to the Blazor app in appsettings, we can co
 var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
-var clients = builder.Configuration.GetSection("Clients").Get<string[]>() ?? []; // Get the clients from the list in appsettings.
+var clients = GetAllowedOrigins(builder.Configuration, "blazorWasmClient"); // Get the clients from the list in appsettings. The second argument needs to be the resource name you passed when calling AddWebAssemblyClient in Program.cs of the AppHost project.
 
 builder.Services.AddCors(options =>
 {
@@ -153,6 +153,26 @@ builder.Services.AddCors(options =>
         policy.AllowCredentials();
     });
 });
+
+private static string[] GetAllowedOrigins(ConfigurationManager config, string resourceName)
+{
+    var configSection = config.GetSection($"services:{resourceName}");
+    var clients = new List<string>();
+    foreach (var protocol in new[] { "http", "https" })
+    {
+        var subSection = configSection.GetSection(protocol);
+        foreach (var child in subSection.GetChildren())
+        {
+            var value = child.Get<string>();
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                clients.Add(value);
+            }
+        }
+    }
+
+     return [.. clients];
+}
 
 // Etc.
 ```
