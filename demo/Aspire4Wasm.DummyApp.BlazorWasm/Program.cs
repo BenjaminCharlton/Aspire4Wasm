@@ -19,7 +19,7 @@ internal class Program
             http.AddServiceDiscovery();
             http.ConfigureHttpClient(client =>
             {
-                client.BaseAddress = new Uri("https+http://apiservice");
+                client.BaseAddress = new Uri("https+http://api");
             });
         });
 
