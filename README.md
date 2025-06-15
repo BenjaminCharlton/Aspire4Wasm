@@ -117,8 +117,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 var blazorServer = builder.AddProject<Projects.InMyCountry_UI_Server>("blazorServer"); // We'll call AddWebAssemblyClient a bit later this time, because we want to get this reference to the Blazor server project first.
 
 var webApi = builder.AddProject<Projects.InMyCountry_WebApi>("inventoryApi")
- .WithReference(blazorServer) // This will pass the endpoint URL of the Blazor app to the web API so that it can be added as a trusted origin in CORS.
- .WaitFor(blazorServer);
+ .WithReference(blazorServer); // This will pass the endpoint URL of the Blazor app to the web API so that it can be added as a trusted origin in CORS.
 
 blazorServer.AddWebAssemblyClient<Projects.InMyCountry_UI_Client>("blazorWasmClient") // Now we can add the Blazor WebAssembly (client) app in the Aspire4Wasm package.
     .WithReference(webApi); // And pass the Blazor client a reference to the web API
