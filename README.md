@@ -2,11 +2,6 @@
 An easy way to pass service discovery information from a distributed application in Aspire down to your Blazor WebAssembly (client) applications.
 You can add service discovery to the client app just like any other Aspire resource.
 It also allows you to configure your WebAssembly application(s) as `AllowedOrigins` in CORS in your ASP .NET Core Web API(s).
-Don't need the source code? Get the Nuget packages:
-
-1. For your AppHost project: https://www.nuget.org/packages/Aspire4Wasm.AppHost/ (essential)
-2. For your WebAssembly project: https://www.nuget.org/packages/Aspire4Wasm.WebAssembly/ (helpful, but you can write the helper methods yourself if you prefer)
-3. For your WebApi project: https://www.nuget.org/packages/Aspire4Wasm.WebApi/ (optional, if you need to configure CORS)
 
 ## Problem statement
 .NET Aspire doesn't currently (as of mid 2025) facilitate a Blazor WebAssembly (client) app discovering Aspire resources, even if the app has been added to the distributed application, because Blazor WebAssembly apps run in the browser and are "standalone".
@@ -23,6 +18,16 @@ My little library Aspire4Wasm solves the problem by:
 2. Providing some helper methods to set up service discovery on your WebAssembly clients
 3. Providing some helper methods for configuring CORS on your ASP .NET Core Web API projects, so that the WebAssembly clients are allowed to call the API.
 
+## Recent changes
+The most significant recent in change is that version 6.*.* separates the solution into three separate Nuget packages.
+If you used the original `Aspire4Wasm` package (versions 1.*.* to 5.*.*), you need to change to the new `Aspire4Wasm.AppHost` package.
+You can then optionally install the two new packages, detailed below.
+
+## Don't need the source code? Get the Nuget packages:
+
+1. For your AppHost project: https://www.nuget.org/packages/Aspire4Wasm.AppHost/ (essential)
+2. For your WebAssembly project: https://www.nuget.org/packages/Aspire4Wasm.WebAssembly/ (helpful, but you can write the helper methods yourself if you prefer)
+3. For your WebApi project: https://www.nuget.org/packages/Aspire4Wasm.WebApi/ (optional, if you need to configure CORS)
 
 ## For an Aspire host that defines a stand-alone Blazor WebAssembly client and a web API
 See the sample app here: https://github.com/BenjaminCharlton/Aspire4Wasm.Samples.Standalone
