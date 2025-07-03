@@ -19,8 +19,8 @@ My little library Aspire4Wasm solves the problem by:
 3. Providing some helper methods for configuring CORS on your ASP .NET Core Web API projects, so that the WebAssembly clients are allowed to call the API.
 
 ## Recent changes
-The most significant recent in change is that version 6.*.* separates the solution into three separate Nuget packages.
-If you used the original `Aspire4Wasm` package (versions 1.*.* to 5.*.*), you need to change to the new `Aspire4Wasm.AppHost` package.
+The most significant recent in change is that version 6.x.x separates the solution into three separate Nuget packages.
+If you used the original `Aspire4Wasm` package (versions 1.x.x to 5.x.x), you need to change to the new `Aspire4Wasm.AppHost` package.
 You can then optionally install the two new packages, detailed below.
 
 ## Don't need the source code? Get the Nuget packages:
