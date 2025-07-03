@@ -29,7 +29,7 @@ You can then optionally install the two new packages, detailed below.
 2. For your WebAssembly project: https://www.nuget.org/packages/Aspire4Wasm.WebAssembly/ (helpful, but you can write the helper methods yourself if you prefer)
 3. For your WebApi project: https://www.nuget.org/packages/Aspire4Wasm.WebApi/ (optional, if you need to configure CORS)
 
-## For an Aspire host that defines a stand-alone Blazor WebAssembly client and a web API
+## For a web API with a a stand-alone Blazor WebAssembly client
 See the sample app here: https://github.com/BenjaminCharlton/Aspire4Wasm.Samples.Standalone
 ### In your AppHost project
 1. Install Aspire4Wasm.AppHost via the Nuget package.
@@ -91,7 +91,8 @@ builder.Services.AddHttpClient<BillingApiService>(client => client.BaseAddress =
         });
     });
 ```
-## For an Aspire host that defines a hosted Blazor WebAssembly client and a web API
+## For a web API with a hosted Blazor WebAssembly client (or a Blazor United app with default rendermode of `InteractiveAuto`)
+Note that, even with the new "Blazor United" template, as soon as you select `InteractiveAuto` as the default rendermode for your Blazor Web App project, it ceases to be "united". It will be divided into two projects, just like a hosted WebAssembly project. I'm not saying that's wrong. It just does. Aspire4Wasm works the same way for both.
 ### In your AppHost project
 1. Install Aspire4Wasm.AppHost via the Nuget package.
 2. In `Program.cs`:
