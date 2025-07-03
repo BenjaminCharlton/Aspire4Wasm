@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.3.1" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>5d998491-99a1-48df-951f-b56e1944ffcc</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Aspire4Wasm.AppHost\Aspire4Wasm.AppHost.csproj" IsAspireProjectResource="false" />
+    <ProjectReference Include="..\DummyApp.BlazorServer\DummyApp.BlazorServer.csproj" />
+    <ProjectReference Include="..\DummyApp.BlazorWasm\DummyApp.BlazorWasm.csproj" />
+    <ProjectReference Include="..\DummyApp.WebApi\DummyApp.WebApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Aspire4Wasm.AppHost.Tests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
+
+</Project>

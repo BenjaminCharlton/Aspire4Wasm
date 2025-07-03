@@ -1,68 +1,160 @@
 # Aspire4Wasm    
-An easy way to pass service discovery information from a distributed application in Aspire down to your Blazor WebAssembly (client) applications. You can then add service discovery to the client app just like any other Aspire resource. Don't need the source code? Get the Nuget package: https://www.nuget.org/packages/Aspire4Wasm/
+An easy way to pass service discovery information from a distributed application in Aspire down to your Blazor WebAssembly (client) applications.
+You can add service discovery to the client app just like any other Aspire resource.
+It also allows you to configure your WebAssembly application(s) as `AllowedOrigins` in CORS in your ASP .NET Core Web API(s).
+Don't need the source code? Get the Nuget packages:
+
+1. For your AppHost project: https://www.nuget.org/packages/Aspire4Wasm.AppHost/ (essential)
+2. For your WebAssembly project: https://www.nuget.org/packages/Aspire4Wasm.WebAssembly/ (helpful, but you can write the helper methods yourself if you prefer)
+3. For your WebApi project: https://www.nuget.org/packages/Aspire4Wasm.WebApi/ (optional, if you need to configure CORS)
 
 ## Problem statement
-.NET Aspire doesn't currently (as of early 2025) facilitate a Blazor WebAssembly (client) app discovering Aspire resources, even if the app has been added to the distributed application, because Blazor WebAssembly apps run in the browser and are "standalone". This has been commented on here:
+.NET Aspire doesn't currently (as of mid 2025) facilitate a Blazor WebAssembly (client) app discovering Aspire resources, even if the app has been added to the distributed application, because Blazor WebAssembly apps run in the browser and are "standalone".
+This has been commented on here:
 
 * https://github.com/dotnet/aspire/issues/4785
 
-The expectation is that these apps will need to be aware of the web APIs they're supposed to call without relying on Aspire, and that they will store these in `appsettings.json` or `appsettings.{environmentName}.json`. This works fine, but if the endpoint changes, or if it differs in your development and production environments, you have to remember to manage those changes in your client app as well as your other resources. This is precisely the problem Aspire is intended to solve.
+Microsoft's expectation is that these apps will need to be aware of the web APIs they're supposed to call without relying on Aspire, and that they will store these in `appsettings.json` or `appsettings.{environmentName}.json`.
+This works fine, but if the endpoint changes, or if it differs in your development and production environments, you have to remember to manage those changes in your client app as well as your other resources.
+This is precisely the problem Aspire is intended to solve.
 
-My little library Aspire4Wasm solves the problem by writing the service discovery information to the `appsettings.{environmentName}.json` file of your client app for you.
+My little library Aspire4Wasm solves the problem by:
+1. Writing the service discovery information from the AppHost to the `appsettings.{environmentName}.json` file of your client app for you
+2. Providing some helper methods to set up service discovery on your WebAssembly clients
+3. Providing some helper methods for configuring CORS on your ASP .NET Core Web API projects, so that the WebAssembly clients are allowed to call the API.
 
-## Quickstart
-Install Aspire4Wasm in your AppHost project via the Nuget package. No need to install it on the client project.
-In your AppHost project's Program.cs file:
 
-1. Add the Web Apis you want your client to be able to call.
-2. Add your Blazor Server app then chain a call to `AddWebAssemblyClient` to add your client app.
-5. Chain a call to `WithReference` to point the client to each web API (you can repeat this for as many Web APIs as you need)
-
-In your client's `Program.cs` file:
-
-1. Call `AddServiceDiscovery`
-2. Configure your `HttpClient`s either globally or one at a time. In each client's `BaseAddress` property, use the name you gave to the resource in your AppHost.
-
-See the example below:
-
-### Example Program.cs in AppHost
+## For an Aspire host that defines a stand-alone Blazor WebAssembly client and a web API
+### In your AppHost project
+1. Install Aspire4Wasm.AppHost via the Nuget package.
+2. In `Program.cs`:
+ a. Add the Web Api project(s) the usual way, with `builder.AddProject`.
+ b. Add the stand-alone Blazor WebAssembly project(s) with `builder.AddStandaloneBlazorWebAssemblyProject`.
+ c. Chain calls to `WithReference` in one or both directions.
+    That is, the client(s) need(s) a reference to any API(s) and the API(s) need a reference any client(s) that call it.
+    If you've configured `AllowAnyOrigin` in CORS (which isn't very isn't very secure) then your API(s) won't need references to clients.
+3. For example:
 ```
 var builder = DistributedApplication.CreateBuilder(args);
 
 var inventoryApi = builder.AddProject<Projects.AspNetCoreWebApi>("inventoryapi");
 var billingApi = builder.AddProject<Projects.SomeOtherWebApi>("billingapi");
 
-builder.AddProject<Projects.Blazor>("blazorServer")
-    .AddWebAssemblyClient<Projects.Blazor_Client>("blazorWasmClient")
+var blazorApp = builder.AddStandAloneBlazorWebAssemblyProject<Projects.Blazor>("blazor")
     .WithReference(inventoryApi)
     .WithReference(billingApi);
 
+inventoryApi.WithReference(blazorApp);
+// Could repeat the line above for billingApi but have not because its CORS settings say AllowAnyOrigin.
+
 builder.Build().Run();
 ```
-### Example Program.cs in your Blazor WebAssembly Client
-Install (on the WebAssembly client) the `Microsoft.Extensions.ServiceDiscovery` Nuget package to get the official Aspire service discovery functionality that is going to read your resource information from your app settings.
+### In your stand-alone Blazor WebAssembly project
+1. Install Aspire4Wasm.WebAssembly via the Nuget package.
+2. In `Program.cs`:
+ a. Call `builder.AddServiceDefaults()`. This adds Aspire service discovery to your Blazor WebAssembly app and also configures every `HttpClient` to use it by default.
+ b. Configure your services that call APIs like this: `builder.Services.AddHttpClient<WeatherApiClient>(client => client.BaseAddress = new Uri("https+http://api"));`
+    where (in this case) "api" is the arbitrary resource name you gave to the web API in the AppHost's `Program.cs`.
+3. Example:
 ```
-builder.Services.AddServiceDiscovery();
-builder.Services.ConfigureHttpClientDefaults(static http =>
-{
-    http.AddServiceDiscovery();
-});
+builder.AddServiceDefaults();
 
-builder.Services.AddHttpClient<IInventoryService, InventoryService>(
-    client =>
+builder.Services.AddHttpClient<InventoryApiService>(client => client.BaseAddress = new Uri("https+http://inventoryapi"));
+builder.Services.AddHttpClient<BillingApiService>(client => client.BaseAddress = new Uri("https+http://billingapi"));
+```
+4. Change `Properties\launchSettings.json` so that `launchBrowser` is `false`. You want your Aspire dashboard to launch when you run your app, not your Blazor app.
+    If your Blazor app launches directly it will be at a randomly assigned port in Kestrel and nothing will work.
+### In your ASP .NET Core Web API project
+1. Install Aspire4Wasm.WebApi via the Nuget package.
+2. In `Program.cs`
+ a. Call `builder.AddServiceDefaults();` This adds Aspire service discovery to your ASP .NET Core Web API so it can find the references you passed to your API clients. 
+ b. Configure CORS using one of the helper methods on `builder.Configuration`. They are `GetServiceEndpoint(string, string)`, `GetServiceEndpoints(string)` and `GetServiceEndpoints(params string)`.
+ Assuming your app has one client, the simplest overload will work fine. The example below assumes you named the client resource "blazor" in your Aspire AppHost.
+ ```
+    builder.Services.AddCors(options =>
     {
-        client.BaseAddress = new Uri("https+http://inventoryapi");
-    });
+        options.AddDefaultPolicy(policy =>
+        {
+            var clients = builder.Configuration.GetServiceEndpoints("blazor"); // Get the http and https endpoints for the client known by resource name as "blazor" in the AppHost.
+            // var clients = builder.Configuration.GetServiceEndpoints("blazor1", "blazor2"); // This overload does the same thing for multiple clients.
+            // var clients = builder.Configuration.GetServiceEndpoint("blazor", "http"); // This overload gets a single named endpoint for a single resource. In this case, the "http" endpoint for the "blazor" resource.
 
-    builder.Services.AddHttpClient<IBillingService, BillingService>(
-    client =>
-    {
-        client.BaseAddress = new Uri("https+http://billingapi");
+            policy.WithOrigins(clients); // Add the clients as allowed origins for cross origin resource sharing.
+            policy.AllowAnyMethod();
+            policy.WithHeaders("X-Requested-With");
+        });
     });
 ```
-(I recommend extracting the names of the resources (e.g. "billingapi" and "inventoryapi") into a string constant somewhere shared by the AppHost and the client, and your other referenced projects. That way, the name is consistent throughout the whole solution.) You probably do this already though!
-## Default behaviour
-Using the default behaviour (in the example) your AppHost will write the service discovery information for all the referenced resources into the `appsettings.{environmentName}.json` file of your client app for you.
+## For an Aspire host that defines a hosted Blazor WebAssembly client and a web API
+### In your AppHost project
+1. Install Aspire4Wasm.AppHost via the Nuget package.
+2. In `Program.cs`:
+ a. Add the Web Api project(s) the usual way, with `builder.AddProject`.
+ b. Add your Blazor Server project with `builder.AddProject` as usual, then chain a call to `AddWebAssemblyClient` to add your client app.
+ c. Chain calls to `WithReference` in one or both directions.
+ That is, the client(s) need(s) a reference to any API(s) and the API(s) need a reference any client(s) that call it.
+ If you've configured `AllowAnyOrigin` in CORS (which isn't very isn't very secure) then your API(s) won't need references to clients.
+3. Example:
+```
+var builder = DistributedApplication.CreateBuilder(args);
+
+var inventoryApi = builder.AddProject<Projects.AspNetCoreWebApi>("inventoryapi");
+var billingApi = builder.AddProject<Projects.SomeOtherWebApi>("billingapi");
+
+var blazorApp = builder.AddProject<Projects.HostedBlazor>("hostedblazor")
+    .AddWebAssemblyClient("wasmclient")
+    .WithReference(inventoryApi)
+    .WithReference(billingApi);
+
+inventoryApi.WithReference(blazorApp);
+// Could repeat the line above for billingApi but have not because its CORS settings say AllowAnyOrigin.
+
+builder.Build().Run();
+```
+### In your Blazor Server project
+No Aspire4Wasm Nuget package necessary in this project.
+### In your Blazor WebAssembly project
+1. Install Aspire4Wasm.WebAssembly via the Nuget package.
+2. In `Program.cs`:
+ a. Call `builder.AddServiceDefaults()`. This adds Aspire service discovery to your Blazor WebAssembly app and also configures every `HttpClient` to use it by default.
+ b. Configure your services that call APIs like this: `builder.Services.AddHttpClient<IWeatherClient, WeatherApiClient>(client => client.BaseAddress = new Uri("https+http://api"));`
+    where (in this case) "api" is the arbitrary resource name you gave to the web API in the AppHost's `Program.cs`.
+    The above example assumes that you're going to use one implementation of `IWeatherClient` when the page is rendered (or pre-rendered) on the server, and a different implementation when
+    it is rendered on the client. This pattern will be familiar for people accustomed to `InteractiveAuto` render mode.
+3. Example:
+```
+builder.AddServiceDefaults();
+
+builder.Services.AddHttpClient<IInventoryService, InventoryApiService>(client => client.BaseAddress = new Uri("https+http://inventoryapi"));
+builder.Services.AddHttpClient<IBillingService, BillingApiService>(client => client.BaseAddress = new Uri("https+http://billingapi"));
+```
+4. Change `Properties\launchSettings.json` so that `launchBrowser` is `false`. You want your Aspire dashboard to launch when you run your app, not your Blazor app.
+    If your Blazor app launches directly it will be at a randomly assigned port in Kestrel and nothing will work.
+### In your ASP .NET Core Web API project
+1. Install Aspire4Wasm.WebApi via the Nuget package.
+2. In `Program.cs`
+ a. Call `builder.AddServiceDefaults();` This adds Aspire service discovery to your ASP .NET Core Web API so it can find the references you passed to your API clients. 
+ b. Configure CORS using one of the helper methods on `builder.Configuration`. They are `GetServiceEndpoint(string, string)`, `GetServiceEndpoints(string)` and `GetServiceEndpoints(params string)`.
+ Assuming your app has one client, the simplest overload will work fine. The example below assumes you named your Blazor host project "hostedblazor" in your Aspire AppHost.
+ That's right, you're using the name you gave to your Blazor Server host project here, but it will also grant access to your Blazor WebAssembly client project.
+ ```
+    builder.Services.AddCors(options =>
+    {
+        options.AddDefaultPolicy(policy =>
+        {
+            var clients = builder.Configuration.GetServiceEndpoints("hostedblazor"); // Get the http and https endpoints for the client known by resource name as "blazor" in the AppHost.
+            // var clients = builder.Configuration.GetServiceEndpoints("blazor1", "blazor2"); // This overload does the same thing for multiple clients.
+            // var clients = builder.Configuration.GetServiceEndpoint("blazor", "http"); // This overload gets a single named endpoint for a single resource. In this case, the "http" endpoint for the "blazor" resource.
+
+            policy.WithOrigins(clients); // Add the clients as allowed origins for cross origin resource sharing.
+            policy.AllowAnyMethod();
+            policy.WithHeaders("X-Requested-With");
+        });
+    });
+```
+## What it's doing under the hood
+All the examples use Aspire4Wasm's default behaviour.
+That is, AppHost will write the service discovery information for all the referenced resources into the `appsettings.{environmentName}.json` file of your client apps for you.
 It uses the following structure. The structure is important because it allows Aspire to "discover" the information on the client.
 ```
 {
@@ -87,19 +179,19 @@ It uses the following structure. The structure is important because it allows As
 }
 ```
 ## Custom behaviours (optional)
-If you want to serialize the service discovery information some other way in your WebAssembly application (for example, in a different JSON file, or in an XML file) you can do so in the AppHost `Program.cs` by creating a custom implementation of `IServiceDiscoveryInfoSerializer` and passing it to the call to `AddWebAssemblyClient` via the `WebAssemblyProjectBuilderOptions` class, like this:
+If you want to serialize the service discovery information some other way in your WebAssembly application (for example, in a different JSON file, or in an XML file) you can.
+1. First create a custom implementation of `IServiceDiscoveryInfoSerializer`
+2. Then in the `Program.cs` of your `AppHost`, pass your custom implementation to the call to `AddWebAssemblyClient` via the `WebAssemblyProjectBuilderOptions` class, like this:
 ```
 var builder = DistributedApplication.CreateBuilder(args);
 
 var inventoryApi = builder.AddProject<Projects.AspNetCoreWebApi>("inventoryapi");
-var billingApi = builder.AddProject<Projects.SomeOtherWebApi>("billingapi");
 
-builder.AddProject<Projects.Blazor>("blazorServer")
-    .AddWebAssemblyClient<Projects.Blazor_Client>("blazorWasmClient" options => {
+builder.AddProject<Projects.Blazor>("hostedblazor")
+    .AddWebAssemblyClient<Projects.Blazor_Client>("wasmClient" options => {
         options.ServiceDiscoveryInfoSerializer = yourImplementation;
     })
     .WithReference(inventoryApi)
-    .WithReference(billingApi);
 
 builder.Build().Run();
 ```
@@ -108,74 +200,13 @@ If you choose to make a custom implementation of `IServiceDiscoveryInfoSerialize
 public void SerializeServiceDiscoveryInfo(IResourceWithServiceDiscovery resource) { }
 ```
 Note: If you choose to override the default behaviour with an output format that Aspire can't read from your WebAssembly client app, you'll also need to override the discovery behaviour on the client, which is outside the scope of what I've developed here.
-## Using service discovery to configure CORS in your web API (optional)
-You can also reference one or more Blazor apps from a web API. One use case would be to configure Cross Origin Resource Sharing (CORS) in the web API to grant access to your clients to submit HTTP requests.
-### Example updated Program.cs in AppHost project
-```
-var builder = DistributedApplication.CreateBuilder(args);
 
-var blazorServer = builder.AddProject<Projects.InMyCountry_UI_Server>("blazorServer"); // We'll call AddWebAssemblyClient a bit later this time, because we want to get this reference to the Blazor server project first.
+## Tips and Troubleshooting
+I'll document here whenever I encounter a problem and (hopefully) how to overcome it.
+1. I recommend extracting the names of your Aspire resources (e.g. "billingapi" and "inventoryapi") into a string constant in a project shared by the AppHost and all the other projects.
+   That way, you can be sure the name is consistent throughout the whole solution.
+2. Change `Properties\launchSettings.json` so that `launchBrowser` is `false` in all projects except your `AppHost`. You want your Aspire dashboard to launch when you run your app, not your Blazor apps.
+   If your Blazor apps do launch directly, they'll be at a randomly assigned port in Kestrel and nothing will work.
 
-var webApi = builder.AddProject<Projects.InMyCountry_WebApi>("inventoryApi")
- .WithReference(blazorServer) // This will pass the endpoint URL of the Blazor app to the web API so that it can be added as a trusted origin in CORS.
- .WaitFor(blazorServer);
-
-blazorServer.AddWebAssemblyClient<Projects.InMyCountry_UI_Client>("blazorWasmClient") // Now we can add the Blazor WebAssembly (client) app in the Aspire4Wasm package.
-    .WithReference(webApi); // And pass the Blazor client a reference to the web API
-
-builder.Build().Run();
-```
-### The example above will add environment variables to the web API project, for example:
-```
-services__webclientapp__http__0 = http://localhost:56481
-services__webclientapp__https__0 = http://localhost:56480
-
-```
-It should add as many clients as you configured in the AppHost.
-### Example continued in Program.cs in the web API project
-Now that the web API has a reference to the Blazor app in appsettings, we can configure CORS like this:
-```
-var builder = WebApplication.CreateBuilder(args);
-builder.AddServiceDefaults();
-
-var clients = GetAllowedOrigins(builder.Configuration, "blazorWasmClient"); // Get the clients from the environment variables. The second argument needs to be the resource name you passed when calling AddWebAssemblyClient in Program.cs of the AppHost project.
-
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.WithOrigins(clients); // Add the clients as allowed origins for cross origin resource sharing.
-        policy.AllowAnyMethod();
-        policy.WithHeaders("X-Requested-With");
-        policy.AllowCredentials();
-    });
-});
-
-private static string[] GetAllowedOrigins(ConfigurationManager config, string resourceName)
-{
-    var configSection = config.GetSection($"services:{resourceName}");
-    var clients = new List<string>();
-    foreach (var protocol in new[] { "http", "https" })
-    {
-        var subSection = configSection.GetSection(protocol);
-        foreach (var child in subSection.GetChildren())
-        {
-            var value = child.Get<string>();
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                clients.Add(value);
-            }
-        }
-    }
-
-     return [.. clients];
-}
-
-// Etc.
-```
-## Troubleshooting
-These are just a few things that I noticed helped me and I hope they help you too.
-* You don't need a `launchsettings.json` in your webassembly client project. The one in your Blazor server project will do.
-* In the `launchsettings.json` of your blazor server project, I recommend that you set `launchBrowser` to `false` for all profiles. This means that when the Aspire dashboard opens up, you'll need to click the link to open up your Blazor client. This is good! If you don't do this, your Blazor client is going to launch on a random port chosen by Aspire. When launched on a random port, your web API might reject the requests of your Blazor client because it doesn't have the expected origin to comply with the API's CORS policy. I tried to stop this happening but couldn't, so this is my workaround.
 ## Contributing
 I'm a hobbyist. I know there are loads of people out there who be able to improve this in ways I can't, or see opportunities for improvement that I can't even imagine. If you want to contribute, bring it on! Send me a pull request.

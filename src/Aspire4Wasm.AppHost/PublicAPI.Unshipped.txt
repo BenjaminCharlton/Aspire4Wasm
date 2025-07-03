@@ -1,0 +1,15 @@
+Aspire.Hosting.BlazorDistributedApplicationBuilderExtensions
+Aspire.Hosting.BlazorResourceBuilderExtensions
+Aspire.Hosting.IJsonFileAccessor
+Aspire.Hosting.IJsonFileAccessor.ReadFileAsJson() -> System.Text.Json.Nodes.JsonObject!
+Aspire.Hosting.IJsonFileAccessor.SaveJson(System.Text.Json.Nodes.JsonObject! updatedContent) -> void
+Aspire.Hosting.IServiceDiscoveryInfoSerializer
+Aspire.Hosting.IServiceDiscoveryInfoSerializer.SerializeServiceDiscoveryInfo(Aspire.Hosting.ApplicationModel.IResourceWithEndpoints! resource) -> void
+Aspire.Hosting.WebAssemblyProjectBuilderOptions
+Aspire.Hosting.WebAssemblyProjectBuilderOptions.ServiceDiscoveryInfoSerializer.get -> Aspire.Hosting.IServiceDiscoveryInfoSerializer!
+Aspire.Hosting.WebAssemblyProjectBuilderOptions.ServiceDiscoveryInfoSerializer.set -> void
+Aspire.Hosting.WebAssemblyProjectBuilderOptions.WebAssemblyProjectBuilderOptions() -> void
+static Aspire.Hosting.BlazorDistributedApplicationBuilderExtensions.AddStandaloneBlazorWebAssemblyProject<TStandAloneBlazorWebAssemblyProject>(this Aspire.Hosting.IDistributedApplicationBuilder! builder, string! webAssemblyProjectName) -> Aspire.Hosting.ApplicationModel.IResourceBuilder<Aspire.Hosting.ApplicationModel.ProjectResource!>!
+static Aspire.Hosting.BlazorDistributedApplicationBuilderExtensions.AddStandaloneBlazorWebAssemblyProject<TStandAloneBlazorWebAssemblyProject>(this Aspire.Hosting.IDistributedApplicationBuilder! builder, string! webAssemblyProjectName, System.Action<Aspire.Hosting.WebAssemblyProjectBuilderOptions!, Aspire.Hosting.IProjectMetadata!, Microsoft.Extensions.Hosting.IHostEnvironment!>! configure) -> Aspire.Hosting.ApplicationModel.IResourceBuilder<Aspire.Hosting.ApplicationModel.ProjectResource!>!
+static Aspire.Hosting.BlazorResourceBuilderExtensions.AddWebAssemblyClient<TClientProject>(this Aspire.Hosting.ApplicationModel.IResourceBuilder<Aspire.Hosting.ApplicationModel.IResource!>! blazorServerProjectBuilder, string! webAssemblyProjectName) -> Aspire.Hosting.ApplicationModel.IResourceBuilder<Aspire.Hosting.ApplicationModel.ProjectResource!>!
+static Aspire.Hosting.BlazorResourceBuilderExtensions.AddWebAssemblyClient<TClientProject>(this Aspire.Hosting.ApplicationModel.IResourceBuilder<Aspire.Hosting.ApplicationModel.IResource!>! blazorServerProjectBuilder, string! webAssemblyProjectName, System.Action<Aspire.Hosting.WebAssemblyProjectBuilderOptions!, Aspire.Hosting.IProjectMetadata!, Microsoft.Extensions.Hosting.IHostEnvironment!>! configure) -> Aspire.Hosting.ApplicationModel.IResourceBuilder<Aspire.Hosting.ApplicationModel.ProjectResource!>!
