@@ -25,6 +25,7 @@ My little library Aspire4Wasm solves the problem by:
 
 
 ## For an Aspire host that defines a stand-alone Blazor WebAssembly client and a web API
+See the sample app here: https://github.com/BenjaminCharlton/Aspire4Wasm.Samples.Standalone
 ### In your AppHost project
 1. Install Aspire4Wasm.AppHost via the Nuget package.
 2. In `Program.cs`:
