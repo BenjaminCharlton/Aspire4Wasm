@@ -208,5 +208,67 @@ I'll document here whenever I encounter a problem and (hopefully) how to overcom
 2. Change `Properties\launchSettings.json` so that `launchBrowser` is `false` in all projects except your `AppHost`. You want your Aspire dashboard to launch when you run your app, not your Blazor apps.
    If your Blazor apps do launch directly, they'll be at a randomly assigned port in Kestrel and nothing will work.
 
+var webApi = builder.AddProject<Projects.InMyCountry_WebApi>("inventoryApi")
+ .WithReference(blazorServer) // This will pass the endpoint URL of the Blazor app to the web API so that it can be added as a trusted origin in CORS.
+ .WaitFor(blazorServer);
+
+blazorServer.AddWebAssemblyClient<Projects.InMyCountry_UI_Client>("blazorWasmClient") // Now we can add the Blazor WebAssembly (client) app in the Aspire4Wasm package.
+    .WithReference(webApi); // And pass the Blazor client a reference to the web API
+
+builder.Build().Run();
+```
+### The example above will add environment variables to the web API project, for example:
+```
+services__webclientapp__http__0 = http://localhost:56481
+services__webclientapp__https__0 = http://localhost:56480
+
+```
+It should add as many clients as you configured in the AppHost.
+### Example continued in Program.cs in the web API project
+Now that the web API has a reference to the Blazor app in appsettings, we can configure CORS like this:
+```
+var builder = WebApplication.CreateBuilder(args);
+builder.AddServiceDefaults();
+
+var clients = GetAllowedOrigins(builder.Configuration, "blazorWasmClient"); // Get the clients from the environment variables. The second argument needs to be the resource name you passed when calling AddWebAssemblyClient in Program.cs of the AppHost project.
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(clients); // Add the clients as allowed origins for cross origin resource sharing.
+        policy.AllowAnyMethod();
+        policy.WithHeaders("X-Requested-With");
+        policy.AllowCredentials();
+    });
+});
+
+private static string[] GetAllowedOrigins(ConfigurationManager config, string resourceName)
+{
+    var configSection = config.GetSection($"services:{resourceName}");
+    var clients = new List<string>();
+    foreach (var protocol in new[] { "http", "https" })
+    {
+        var subSection = configSection.GetSection(protocol);
+        foreach (var child in subSection.GetChildren())
+        {
+            var value = child.Get<string>();
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                clients.Add(value);
+            }
+        }
+    }
+
+     return [.. clients];
+}
+
+// Etc.
+```
+## Troubleshooting
+These are just a few things that I noticed helped me and I hope they help you too.
+* You don't need a `launchsettings.json` in your webassembly client project. The one in your Blazor server project will do.
+* In the `launchsettings.json` of your blazor server project, I recommend that you set `launchBrowser` to `false` for all profiles. This means that when the Aspire dashboard opens up, you'll need to click the link to open up your Blazor client. This is good! If you don't do this, your Blazor client is going to launch on a random port chosen by Aspire. When launched on a random port, your web API might reject the requests of your Blazor client because it doesn't have the expected origin to comply with the API's CORS policy. I tried to stop this happening but couldn't, so this is my workaround.
+* In the `launchsettings.json` of your blazor server project, I recommend that you set `launchBrowser` to `false` for all profiles. This means that when the Aspire dashboard opens up, you'll need to click the link to open up your Blazor client. This is good! If you don't do this, your Blazor client is going to launch on a random port chosen by Aspire. When launched on a random port, your web API might reject the requests of your Blazor client because it doesn't have the expected origin to comply with the API's CORS policy. I tried to stop this happening but couldn't, so this is my workaround.
 ## Contributing
 I'm a hobbyist. I know there are loads of people out there who be able to improve this in ways I can't, or see opportunities for improvement that I can't even imagine. If you want to contribute, bring it on! Send me a pull request.
