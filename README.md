@@ -29,8 +29,14 @@ You can then optionally install the two new packages, detailed below.
 2. For your WebAssembly project: https://www.nuget.org/packages/Aspire4Wasm.WebAssembly/ (helpful, but you can write the helper methods yourself if you prefer)
 3. For your WebApi project: https://www.nuget.org/packages/Aspire4Wasm.WebApi/ (optional, if you need to configure CORS)
 
-## For a web API with a stand-alone Blazor WebAssembly client
-See the sample app here: https://github.com/BenjaminCharlton/Aspire4Wasm.Samples.Standalone
+## Aspire4Wasm sample apps
+
+* Aspire + WebAPI + Hosted Blazor WebAssembly + Bootstrap: https://github.com/BenjaminCharlton/Aspire4Wasm.Samples.Hosted
+* Aspire + WebAPI + Standalone Blazor WebAssembly + Bootstrap: https://github.com/BenjaminCharlton/Aspire4Wasm.Samples.Standalone
+* Aspire + WebAPI + Hosted Blazor WebAssembly + MudBlazor: https://github.com/BenjaminCharlton/Aspire4Wasm.Samples.Hosted.Mud
+* Aspire + WebAPI + Standalone Blazor WebAssembly + MudBlazor: https://github.com/BenjaminCharlton/Aspire4Wasm.Samples.Standalone.Mud
+
+## QuickStart For a web API with a stand-alone Blazor WebAssembly client
 ### In your AppHost project
 1. Install Aspire4Wasm.AppHost via the Nuget package.
 2. In `Program.cs`:
@@ -91,8 +97,7 @@ builder.Services.AddHttpClient<BillingApiService>(client => client.BaseAddress =
         });
     });
 ```
-## For a web API with a hosted Blazor WebAssembly client (or a Blazor United app with default rendermode of `InteractiveAuto`)
-See the sample app here: https://github.com/BenjaminCharlton/Aspire4Wasm.Samples.Hosted
+## QuickStart For a web API with a hosted Blazor WebAssembly client (or a Blazor United app with default rendermode of `InteractiveAuto`)
 
 Note that, even with the new "Blazor United" template, as soon as you select `InteractiveAuto` as the default rendermode for your Blazor Web App project, it ceases to be "united". It will be divided into two projects, just like a hosted WebAssembly project. I'm not saying that's wrong. It just does. Aspire4Wasm works the same way for both.
 ### In your AppHost project
