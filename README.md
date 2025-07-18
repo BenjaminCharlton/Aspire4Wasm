@@ -183,6 +183,14 @@ builder.Services.AddHttpClient<IBillingService, BillingApiService>(client => cli
             policy.WithHeaders("X-Requested-With");
         });
     });
+
+// ... other stuff
+
+var app = builder.Build();
+
+// ... other stuff
+
+app.UseCors();
 ```
 ## What it's doing under the hood
 
