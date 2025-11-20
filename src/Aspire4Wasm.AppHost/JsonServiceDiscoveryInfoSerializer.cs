@@ -30,7 +30,7 @@ internal sealed class JsonServiceDiscoveryInfoSerializer(IJsonFileAccessor fileA
             {
                 if (endpoint.AllocatedEndpoint is null)
                 {
-                    throw new InvalidOperationException($"The distributed application's endpoints have not been allocated yet. The {nameof(SerializeServiceDiscoveryInfo)} method should be called after {nameof(AfterEndpointsAllocatedEvent)} has fired.");
+                    throw new InvalidOperationException($"The distributed application's endpoints have not been allocated yet. The {nameof(SerializeServiceDiscoveryInfo)} method should be called after {nameof(ResourceEndpointsAllocatedEvent)} has fired.");
                 }
 
                 var endpointName = endpoint.Name;

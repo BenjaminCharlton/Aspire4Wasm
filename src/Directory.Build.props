@@ -1,0 +1,49 @@
+<Project>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />
+  
+  <PropertyGroup>
+    <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+
+    <Title>Aspire for Blazor WebAssembly clients</Title>
+    <Company>Just me</Company>
+    <Authors>Benjamin Charlton</Authors>
+    <Copyright>Copyright 2025 Benjamin Charlton</Copyright>
+
+    <PackageProjectUrl>https://github.com/BenjaminCharlton/Aspire4Wasm</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/BenjaminCharlton/Aspire4Wasm</RepositoryUrl>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    <FileVersion></FileVersion>
+    <AssemblyVersion></AssemblyVersion>
+
+    <PackageReleaseNotes>
+      Aspire4Wasm.AppHost replaces Aspire4Wasm in version 6.
+      Two new packages have been released: Aspire4Wasm.WebAssembly and Aspire4Wasm.WebApi.
+      This provides Aspire compatibility for stand-alone Blazor WebAssembly projects as well as hosted Blazor projects.
+      See the README for more information.
+    </PackageReleaseNotes>
+
+    <IsAspireSharedProject>true</IsAspireSharedProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

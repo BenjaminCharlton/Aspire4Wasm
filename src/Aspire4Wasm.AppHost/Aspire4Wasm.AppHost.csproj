@@ -1,56 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>Aspire for Blazor WebAssembly clients</Title>
-    <Company>Just me</Company>
-    <Authors>Benjamin Charlton</Authors>
-    <Description>Easily leverage Aspire's service discovery in Blazor WebAssembly client applications. Install this in your Aspire AppHost.</Description>
-    <Copyright>Copyright 2025 Benjamin Charlton</Copyright>
-    <PackageProjectUrl>https://github.com/BenjaminCharlton/Aspire4Wasm</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/BenjaminCharlton/Aspire4Wasm</RepositoryUrl>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <FileVersion></FileVersion>
-    <AssemblyVersion></AssemblyVersion>
+    <Description>
+      Easily leverage Aspire's service discovery in Blazor WebAssembly client applications.
+      Install this in your Aspire AppHost.
+    </Description>
     <Version>6.0.0</Version>
-    <PackageReleaseNotes>
-      Aspire4Wasm.AppHost replaces Aspire4Wasm in version 6.
-      Two new packages have been released: Aspire4Wasm.WebAssembly and Aspire4Wasm.WebApi.
-      This provides Aspire compatibility for stand-alone Blazor WebAssembly projects as well as hosted Blazor projects.
-      See the README for more information.
-    </PackageReleaseNotes>
-    <IsAspireSharedProject>true</IsAspireSharedProject>
+    <RootNamespace>Aspire.Hosting</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting" Version="9.3.2" />
+    <PackageReference Include="Aspire.Hosting" Version="13.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="4.14.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="TestableIO.System.IO.Abstractions" Version="22.0.14" />
-    <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="22.0.14" />
+    <PackageReference Include="TestableIO.System.IO.Abstractions" Version="22.0.16" />
+    <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="22.0.16" />
   </ItemGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
-    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
-  </ItemGroup>
-
-	<ItemGroup>
-	  <None Include="..\..\LICENSE.txt">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
-	  <None Include="..\..\README.md">
-	    <Pack>True</Pack>
-	    <PackagePath>\</PackagePath>
-	  </None>
-	</ItemGroup>
 
 </Project>

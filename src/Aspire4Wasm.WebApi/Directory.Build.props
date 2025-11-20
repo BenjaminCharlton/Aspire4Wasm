@@ -1,5 +1,8 @@
 <!-- Properties for shippable code projects -->
 <Project>
+
+  <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />
+  
 	<PropertyGroup Label="Code Analysis and Suppressions">
 		<!-- Suppressing IDE0130: Namespace does not match folder structure.
 		Justification: For discoverability, extension methods should be defined in the namespace of the class they extend. -->

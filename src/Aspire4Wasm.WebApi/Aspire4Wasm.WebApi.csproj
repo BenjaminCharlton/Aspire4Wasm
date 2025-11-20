@@ -1,51 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>Aspire for Blazor WebAssembly clients</Title>
-    <Company>Just me</Company>
-    <Authors>Benjamin Charlton</Authors>
-    <Description>Easily leverage Aspire's service discovery in Blazor WebAssembly client applications. Install this in your web API projects to make CORS configuration of WebAssembly clients easier.</Description>
-    <Copyright>Copyright 2025 Benjamin Charlton</Copyright>
-    <PackageProjectUrl>https://github.com/BenjaminCharlton/Aspire4Wasm</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/BenjaminCharlton/Aspire4Wasm</RepositoryUrl>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <FileVersion></FileVersion>
-    <AssemblyVersion></AssemblyVersion>
+    <Description>
+      Easily leverage Aspire's service discovery in Blazor WebAssembly client applications.
+      Install this in your web API projects to make CORS configuration of WebAssembly clients easier.
+    </Description>
     <Version>6.0.1</Version>
-    <PackageReleaseNotes>
-      Aspire4Wasm.AppHost replaces Aspire4Wasm in version 6.
-      Two new packages have been released: Aspire4Wasm.WebAssembly and Aspire4Wasm.WebApi.
-      This provides Aspire compatibility for stand-alone Blazor WebAssembly projects as well as hosted Blazor projects.
-      See the README for more information.
-    </PackageReleaseNotes>
-    <IsAspireSharedProject>true</IsAspireSharedProject>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.6" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
-    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\..\LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
   </ItemGroup>
 
 </Project>
