@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 namespace Aspire4Wasm.DummyApp.Web;
 
 public class WeatherApiClient(HttpClient httpClient)
@@ -6,7 +9,7 @@ public class WeatherApiClient(HttpClient httpClient)
     {
         List<WeatherForecast>? forecasts = null;
 
-        await foreach (var forecast in httpClient.GetFromJsonAsAsyncEnumerable<WeatherForecast>("/weatherforecast", cancellationToken))
+        await foreach (var forecast in httpClient.GetFromJsonAsAsyncEnumerable<WeatherForecast>("/weatherforecast", cancellationToken).ConfigureAwait(false))
         {
             if (forecasts?.Count >= maxItems)
             {
