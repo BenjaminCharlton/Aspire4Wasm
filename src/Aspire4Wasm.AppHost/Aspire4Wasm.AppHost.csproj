@@ -5,7 +5,7 @@
       Easily leverage Aspire's service discovery in Blazor WebAssembly client applications.
       Install this in your Aspire AppHost.
     </Description>
-    <Version>6.0.0</Version>
+    <Version>7.0.0</Version>
     <RootNamespace>Aspire.Hosting</RootNamespace>
   </PropertyGroup>
 
