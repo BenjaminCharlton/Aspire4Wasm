@@ -45,13 +45,14 @@ You can then optionally install the two new packages, detailed below.
 ### In your AppHost project
 
 1. Install Aspire4Wasm.AppHost via the Nuget package.
-2. In `Program.cs`:
+2. Add a project reference to your Blazor WebAssembly client.
+3. In `Program.cs`:
  a. Add the Web Api project(s) the usual way, with `builder.AddProject`.
  b. Add the stand-alone Blazor WebAssembly project(s) with `builder.AddStandaloneBlazorWebAssemblyProject`.
  c. Chain calls to `WithReference` in one or both directions.
     That is, the client(s) need(s) a reference to any API(s) and the API(s) need a reference any client(s) that call it.
     If you've configured `AllowAnyOrigin` in CORS (which isn't very isn't very secure) then your API(s) won't need references to clients.
-3. For example:
+4. For example:
 ```
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -114,14 +115,15 @@ Note that, even with the new "Blazor United" template, as soon as you select `In
 
 ### In your AppHost project
 
-1. Install Aspire4Wasm.AppHost via the Nuget package.
-2. In `Program.cs`:
+1. Add a project reference to your Blazor WebAssembly client.
+2. Install Aspire4Wasm.AppHost via the Nuget package.
+3. In `Program.cs`:
  a. Add the Web Api project(s) the usual way, with `builder.AddProject`.
  b. Add your Blazor Server project with `builder.AddProject` as usual, then chain a call to `AddWebAssemblyClient` to add your client app.
  c. Chain calls to `WithReference` in one or both directions.
  That is, the client(s) need(s) a reference to any API(s) and the API(s) need a reference any client(s) that call it.
  If you've configured `AllowAnyOrigin` in CORS (which isn't very isn't very secure) then your API(s) won't need references to clients.
-3. Example:
+4. Example:
 ```
 var builder = DistributedApplication.CreateBuilder(args);
 
