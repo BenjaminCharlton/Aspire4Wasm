@@ -58,7 +58,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 var inventoryApi = builder.AddProject<Projects.AspNetCoreWebApi>("inventoryapi");
 var billingApi = builder.AddProject<Projects.SomeOtherWebApi>("billingapi");
 
-var blazorApp = builder.AddStandAloneBlazorWebAssemblyProject<Projects.Blazor>("blazor")
+var blazorApp = builder.AddStandAloneBlazorWebAssemblyProject<Projects.BlazorStandAloneWebAssemblyClient>("blazor")
     .WithReference(inventoryApi)
     .WithReference(billingApi);
 
@@ -129,7 +129,7 @@ var inventoryApi = builder.AddProject<Projects.AspNetCoreWebApi>("inventoryapi")
 var billingApi = builder.AddProject<Projects.SomeOtherWebApi>("billingapi");
 
 var blazorApp = builder.AddProject<Projects.HostedBlazor>("hostedblazor")
-    .AddWebAssemblyClient("wasmclient")
+    .AddWebAssemblyClient<Projects.HostedBlazorWebAsssemblyClient>("wasmclient")
     .WithReference(inventoryApi)
     .WithReference(billingApi);
 
