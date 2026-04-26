@@ -6,7 +6,7 @@ It also allows you to configure your WebAssembly application(s) as `AllowedOrigi
 
 ## Problem statement
 
-.NET Aspire (which is excellent) doesn't currently (as of mid 2025) facilitate a Blazor WebAssembly (client) app discovering Aspire resources, even if the app has been added to the distributed application, because Blazor WebAssembly apps run in the browser and are "standalone".
+.NET Aspire (which is excellent) doesn't currently (as of mid 2026) facilitate a Blazor WebAssembly (client) app discovering Aspire resources, even if the app has been added to the distributed application, because Blazor WebAssembly apps run in the browser and are "standalone".
 This has been commented on here:
 
 * https://github.com/dotnet/aspire/issues/4785
